@@ -1,0 +1,28 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/01/Or.hdl
+
+ /**
+ * Or gate:
+ * out = 1 if (a == 1 or b == 1)
+ *       0 otherwise
+ */
+
+CHIP Or {
+    IN a, b;
+    OUT out;
+
+    PARTS:
+    // Put your code here:
+    // Or =
+    // x y f
+    // 0 0 0
+    // 0 1 1
+    // 1 0 1
+    // 1 1 1
+    // Therefore, the canonical representation of Or is (not x)*y + x*(not y) + x*y.
+    Not  (in=a, out=out0);
+    Not  (in=b, out=out1);
+    Nand (a=out0, b=out1, out=out);
+}

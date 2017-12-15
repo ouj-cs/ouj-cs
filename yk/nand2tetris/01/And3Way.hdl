@@ -1,0 +1,14 @@
+/**
+ * And3Way gate: 
+ * out = 1 if (a == 1 and b == 1 and c == 1)
+ *       0 otherwise
+ */
+
+CHIP And3Way {
+    IN a, b, c;
+    OUT out;
+
+    PARTS:
+    And (a=a,    b=b, out=out0);
+    And (a=out0, b=c, out=out);
+}

@@ -1,0 +1,11 @@
+/**
+ * 16-bit bitwise constant One:
+ * out = 1
+ */
+
+CHIP One16 {
+    OUT out[16];
+
+    PARTS:
+    And16 (a=true, b[0]=true, b[1..15]=false, out=out);
+}

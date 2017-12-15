@@ -1,0 +1,11 @@
+/**
+ * 16-bit bitwise constant Zero:
+ * out = 0
+ */
+
+CHIP Zero16 {
+    OUT out[16];
+
+    PARTS:
+    And16 (a=true, b=false, out=out);
+}

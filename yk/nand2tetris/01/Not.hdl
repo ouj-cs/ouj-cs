@@ -1,0 +1,31 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/01/Not.hdl
+
+/**
+ * Not gate:
+ * out = not in
+ */
+
+CHIP Not {
+    IN in;
+    OUT out;
+
+    PARTS:
+    // Put your code here:
+    // Nand =
+    // x y f
+    // 0 0 1
+    // 0 1 1
+    // 1 0 1
+    // 1 1 0
+    // Therefore, the canonical representation of Nand is (not x)*(not y) + (not x)*y + x*(not y).
+    // Not =
+    // x f
+    // 0 1
+    // 1 0
+    // Therefore, the canonical representation of Not is (not x).
+    // If y = x, Nand = (not x)*(not x) + (not x)*x + x*(not x), and it is (not x).
+    Nand (a=in, b=in, out=out);
+}
