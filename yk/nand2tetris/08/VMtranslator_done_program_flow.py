@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import collections
-import glob
 import os
 import re
 import sys
@@ -218,29 +217,20 @@ class CodeWriter:
     def close(self):
         self.__file.close()
     def writeInit(self):
-        s = "// bootstrap\n"
+        s = "// bootstrap"
         s += "@256\n"
         s += "D=A\n"
         s += "@SP\n"
         s += "M=D     // M[SP] := 256\n"
-        s += "@333\n"
+        s += "@300\n"
         s += "D=A\n"
         s += "@LCL\n"
-        s += "M=D     // M[LCL] := 333\n"
-        s += "@444\n"
+        s += "M=D     // M[LCL] := 300\n"
+        s += "@400\n"
         s += "D=A\n"
         s += "@ARG\n"
-        s += "M=D     // M[ARG] := 444\n"
-        s += "@555\n"
-        s += "D=A\n"
-        s += "@THIS\n"
-        s += "M=D     // M[THIS] := 555\n"
-        s += "@666\n"
-        s += "D=A\n"
-        s += "@THAT\n"
-        s += "M=D     // M[THAT] := 666\n"
+        s += "M=D     // M[ARG] := 400\n"
         self.__file.write(s + "\n")
-        self.writeCall("Sys.init", 0)
     def writeLabel(self, label):
         s = ""
         s += "// label {}\n".format(label)
@@ -262,156 +252,11 @@ class CodeWriter:
         s += "D;JNE\n"
         self.__file.write(s + "\n")
     def writeCall(self, functionName, numArgs):
-        # push return-address
-        # push LCL
-        # push ARG
-        # push THIS
-        # push THAT
-        # ARG = SP-n-5
-        # LCL = SP
-        # goto f
-        # (return-address)
-        s = ""
-        s += "// call {} {}\n".format(functionName, numArgs)
-        label = self.__get_label()
-        s += "@{}\n".format(label)
-        s += "D=A     // D := return-address\n"
-        s += "@SP     // A := SP\n"
-        s += "A=M     // A := M[SP]\n"
-        s += "M=D     // M[M[SP]] := D (return-address)\n"
-        s += "@SP     // A := SP\n"
-        s += "M=M+1   // M[SP] := M[SP] + 1\n"
-        s += "@LCL    // A := LCL\n"
-        s += "D=M     // D := M[LCL]\n"
-        s += "@SP     // A := SP\n"
-        s += "A=M     // A := M[SP]\n"
-        s += "M=D     // M[M[SP]] := D (LCL of the calling function)\n"
-        s += "@SP     // A := SP\n"
-        s += "M=M+1   // M[SP] := M[SP] + 1\n"
-        s += "@ARG    // A := ARG\n"
-        s += "D=M     // D := M[ARG]\n"
-        s += "@SP     // A := SP\n"
-        s += "A=M     // A := M[SP]\n"
-        s += "M=D     // M[M[SP]] := D (ARG of the calling function)\n"
-        s += "@SP     // A := SP\n"
-        s += "M=M+1   // M[SP] := M[SP] + 1\n"
-        s += "@THIS   // A := THIS\n"
-        s += "D=M     // D := M[THIS]\n"
-        s += "@SP     // A := SP\n"
-        s += "A=M     // A := M[SP]\n"
-        s += "M=D     // M[M[SP]] := D (THIS of the calling function)\n"
-        s += "@SP     // A := SP\n"
-        s += "M=M+1   // M[SP] := M[SP] + 1\n"
-        s += "@THAT   // A := THAT\n"
-        s += "D=M     // D := M[THAT]\n"
-        s += "@SP     // A := SP\n"
-        s += "A=M     // A := M[SP]\n"
-        s += "M=D     // M[M[SP]] := D (THAT of the calling function)\n"
-        s += "@SP     // A := SP\n"
-        s += "M=M+1   // M[SP] := M[SP] + 1\n"
-        s += "@SP     // A := SP\n"
-        s += "A=M     // A := M[SP]\n"
-        for _ in range(numArgs):
-            s += "A=A-1   // A := A - 1\n"
-        s += "A=A-1   // A := A - 1\n"
-        s += "A=A-1   // A := A - 1\n"
-        s += "A=A-1   // A := A - 1\n"
-        s += "A=A-1   // A := A - 1\n"
-        s += "A=A-1   // A := A - 1\n"
-        s += "D=A     // D := A\n"
-        s += "@ARG    // A := ARG\n"
-        s += "M=D     // M[ARG] := D\n"
-        s += "@SP     // A := SP\n"
-        s += "D=M     // D := M[SP]\n"
-        s += "@LCL    // A := LCL\n"
-        s += "M=D     // M[LCL] := D\n"
-        s += "@{}\n".format(functionName)
-        s += "0;JMP   // goto f\n"
-        s += "({})\n".format(label)
-        self.__file.write(s + "\n")
+        pass
     def writeReturn(self):
-        # FRAME = LCL
-        # RET   = *(FRAME-5)
-        # *ARG  = pop()
-        # SP    = ARG+1
-        # THAT  = *(FRAME-1)
-        # THIS  = *(FRAME-2)
-        # ARG   = *(FRAME-3)
-        # LCL   = *(FRAME-4)
-        # goto  RET
-        s = ""
-        s += "// return\n"
-        s += "@LCL    // A := LCL\n"
-        s += "D=M     // D := M[LCL]\n"
-        s += "@R13    // A := R13\n"
-        s += "M=D     // M[R13] := D\n"
-        s += "A=M     // A := M[R13]\n"
-        s += "A=A-1   // A := A - 1\n"
-        s += "A=A-1   // A := A - 1\n"
-        s += "A=A-1   // A := A - 1\n"
-        s += "A=A-1   // A := A - 1\n"
-        s += "A=A-1   // A := A - 1\n"
-        s += "D=M     // D := M[M[R13] - 5]\n"
-        s += "@R14    // A := R14\n"
-        s += "M=D     // M[R14] := D (return address)\n"
-        s += "@SP     // A := SP\n"
-        s += "M=M-1   // M[SP] := M[SP] - 1\n"
-        s += "A=M     // A := M[SP]\n"
-        s += "D=M     // D := M[M[SP]]\n"
-        s += "@ARG    // A := ARG\n"
-        s += "A=M     // A := M[ARG]\n"
-        s += "M=D     // M[M[ARG]] := D (return value)\n"
-        s += "D=A+1   // D := M[ARG] + 1\n"
-        s += "@SP     // A := SP\n"
-        s += "M=D     // M[SP] := D (stack top)\n"
-        s += "@R13    // A := R13\n"
-        s += "A=M     // A := M[R13]\n"
-        s += "A=A-1   // A := A - 1\n"
-        s += "D=M     // D := M[M[R13] - 1]\n"
-        s += "@THAT   // A := THAT\n"
-        s += "M=D     // M[THAT] := D\n"
-        s += "@R13    // A := R13\n"
-        s += "A=M     // A := M[R13]\n"
-        s += "A=A-1   // A := A - 1\n"
-        s += "A=A-1   // A := A - 1\n"
-        s += "D=M     // D := M[M[R13] - 2]\n"
-        s += "@THIS   // A := THIS\n"
-        s += "M=D     // M[THIS] := D\n"
-        s += "@R13    // A := R13\n"
-        s += "A=M     // A := M[R13]\n"
-        s += "A=A-1   // A := A - 1\n"
-        s += "A=A-1   // A := A - 1\n"
-        s += "A=A-1   // A := A - 1\n"
-        s += "D=M     // D := M[M[R13] - 3]\n"
-        s += "@ARG    // A := ARG\n"
-        s += "M=D     // M[ARG] := D\n"
-        s += "@R13    // A := R13\n"
-        s += "A=M     // A := M[R13]\n"
-        s += "A=A-1   // A := A - 1\n"
-        s += "A=A-1   // A := A - 1\n"
-        s += "A=A-1   // A := A - 1\n"
-        s += "A=A-1   // A := A - 1\n"
-        s += "D=M     // D := M[M[R13] - 4]\n"
-        s += "@LCL    // A := LCL\n"
-        s += "M=D     // M[LCL] := D\n"
-        s += "@R14    // A := R14\n"
-        s += "A=M     // A := M[R14]\n"
-        s += "0;JMP   // goto M[R14]\n"
-        self.__file.write(s + "\n")
+        pass
     def writeFunction(self, functionName, numLocals):
-        # (f)
-        # repeat k times:
-        # push 0
-        s = ""
-        s += "// function {} {}\n".format(functionName, numLocals)
-        s += "({})\n".format(functionName)
-        for _ in range(numLocals):
-            s += "@SP     // A := SP\n"
-            s += "A=M     // A := M[SP]\n"
-            s += "M=0     // M[M[SP]] := 0\n"
-            s += "@SP     // A := SP\n"
-            s += "M=M+1   // M[SP] := M[SP] + 1\n"
-        self.__file.write(s + "\n")
+        pass
 
 def get_paths():
     argv_1 = sys.argv[1]
@@ -426,32 +271,20 @@ def get_paths():
 #    print("is_dir = {}".format(is_dir))
     if not is_dir:
         return [path_abs]
-    else:
-        paths = glob.glob("{}/*.vm".format(path_abs))
-        if not all(map(os.path.exists, paths)):
-            raise Exception("Some file(s) not exists.")
-        return paths
 
 def get_path_output():
     argv_1 = sys.argv[1]
-    if argv_1.endswith("/"):
-        argv_1 = argv_1[:-1]
     basename = os.path.basename(argv_1)
     name = os.path.splitext(basename)[0]
     path_abs = os.path.abspath(argv_1)
-    is_dir = os.path.isdir(path_abs)
-    if not is_dir:
-        dirname = os.path.dirname(path_abs)
-        return "{}/{}.asm".format(dirname, name)
-    else:
-        return "{}/{}.asm".format(path_abs, name)
+    dirname = os.path.dirname(path_abs)
+    return "{}/{}.asm".format(dirname, name)
 
 def main():
     paths = get_paths()
-    print("paths = {}".format(paths))
+#    print("paths = {}".format(paths))
     path_output = get_path_output()
     writer = CodeWriter(path_output)
-    writer.writeInit()
     for path in paths:
         parser = Parser(path)
         writer.setFileName(os.path.splitext(os.path.basename(path))[0])
