@@ -8,9 +8,9 @@
  * out = a if sel == 000
  *       b if sel == 001
  *       c if sel == 010
- *       d if sel == 011 
+ *       d if sel == 011
  *       e if sel == 100
- *       f if sel == 101 
+ *       f if sel == 101
  *       g if sel == 110
  *       h if sel == 111
  */
@@ -25,7 +25,7 @@ CHIP Mux8Way16 {
     Mux(a=a[0], b=b[0], sel=sel[0], out=oab0);
     Mux(a=a[1], b=b[1], sel=sel[0], out=oab1);
     Mux(a=a[2], b=b[2], sel=sel[0], out=oab2);
-    Mux(a=a[3], b=b[3], sel=sel[0], out=oab3);    
+    Mux(a=a[3], b=b[3], sel=sel[0], out=oab3);
     Mux(a=a[4], b=b[4], sel=sel[0], out=oab4);
     Mux(a=a[5], b=b[5], sel=sel[0], out=oab5);
     Mux(a=a[6], b=b[6], sel=sel[0], out=oab6);
@@ -38,7 +38,7 @@ CHIP Mux8Way16 {
     Mux(a=a[13], b=b[13], sel=sel[0], out=oab13);
     Mux(a=a[14], b=b[14], sel=sel[0], out=oab14);
     Mux(a=a[15], b=b[15], sel=sel[0], out=oab15);
-    
+
     Mux(a=c[0], b=d[0], sel=sel[0], out=ocd0);
     Mux(a=c[1], b=d[1], sel=sel[0], out=ocd1);
     Mux(a=c[2], b=d[2], sel=sel[0], out=ocd2);
@@ -55,7 +55,7 @@ CHIP Mux8Way16 {
     Mux(a=c[13], b=d[13], sel=sel[0], out=ocd13);
     Mux(a=c[14], b=d[14], sel=sel[0], out=ocd14);
     Mux(a=c[15], b=d[15], sel=sel[0], out=ocd15);
-    
+
     Mux(a=e[0], b=f[0], sel=sel[0], out=oef0);
     Mux(a=e[1], b=f[1], sel=sel[0], out=oef1);
     Mux(a=e[2], b=f[2], sel=sel[0], out=oef2);
@@ -123,7 +123,7 @@ CHIP Mux8Way16 {
     Mux(a=oef13, b=ogh13, sel=sel[1], out=oefgh13);
     Mux(a=oef14, b=ogh14, sel=sel[1], out=oefgh14);
     Mux(a=oef15, b=ogh15, sel=sel[1], out=oefgh15);
-    
+
     Mux(a=oabcd0, b=oefgh0, sel=sel[2], out=out[0]);
     Mux(a=oabcd1, b=oefgh1, sel=sel[2], out=out[1]);
     Mux(a=oabcd2, b=oefgh2, sel=sel[2], out=out[2]);
