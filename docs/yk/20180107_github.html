@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+ </head>
+ <body>
+  <h1>GitHubの基本的な使い方について</h1>
+  <pre><code># リモートリポジトリをローカルにクローンする。
+git clone https://github.com/ouj-cs/ouj-cs.git
+
+# リポジトリのディレクトリのさらに自分のディレクトリに移動する。
+cd ouj-cs/yk
+
+# 新しいデータを含むファイルを作成する。
+echo "hello, world" > test.txt
+
+# 現在のファイルのデータとローカルリポジトリの差分などの情報を確認する。
+git status
+
+# コミットされていない変更を全てステージする。（コミットの準備）
+git add --all
+
+# 状況を確認する。
+git status
+
+# 初めてのコミットなので、メールアドレスとユーザ名を設定する。
+git config user.email "example@example.com"
+git config user.name "yk"
+
+# メッセージ（必須）を沿えてコミットする。
+git commit -m "test commit"
+
+# 状況を確認する。
+git status
+
+# リモートリポジトリにローカルリポジトリの状態を反映（プッシュ）する。
+git push origin master
+Username for 'https://github.com': ouj-cs
+Password for 'https://ouj-cs@github.com': ************
+
+# コミットが素直に行かない場合、先に他の人が追加したデータをローカルに反映しておく。
+git pull</code></pre>
+ </body>
+</html>
