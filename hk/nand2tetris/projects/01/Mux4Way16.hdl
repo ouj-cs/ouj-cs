@@ -16,54 +16,7 @@ CHIP Mux4Way16 {
     OUT out[16];
 
     PARTS:
-    Mux(a=a[0], b=b[0], sel=sel[0], out=oab0);
-    Mux(a=a[1], b=b[1], sel=sel[0], out=oab1);
-    Mux(a=a[2], b=b[2], sel=sel[0], out=oab2);
-    Mux(a=a[3], b=b[3], sel=sel[0], out=oab3);
-    Mux(a=a[4], b=b[4], sel=sel[0], out=oab4);
-    Mux(a=a[5], b=b[5], sel=sel[0], out=oab5);
-    Mux(a=a[6], b=b[6], sel=sel[0], out=oab6);
-    Mux(a=a[7], b=b[7], sel=sel[0], out=oab7);
-    Mux(a=a[8], b=b[8], sel=sel[0], out=oab8);
-    Mux(a=a[9], b=b[9], sel=sel[0], out=oab9);
-    Mux(a=a[10], b=b[10], sel=sel[0], out=oab10);
-    Mux(a=a[11], b=b[11], sel=sel[0], out=oab11);
-    Mux(a=a[12], b=b[12], sel=sel[0], out=oab12);
-    Mux(a=a[13], b=b[13], sel=sel[0], out=oab13);
-    Mux(a=a[14], b=b[14], sel=sel[0], out=oab14);
-    Mux(a=a[15], b=b[15], sel=sel[0], out=oab15);
-
-    Mux(a=c[0], b=d[0], sel=sel[0], out=ocd0);
-    Mux(a=c[1], b=d[1], sel=sel[0], out=ocd1);
-    Mux(a=c[2], b=d[2], sel=sel[0], out=ocd2);
-    Mux(a=c[3], b=d[3], sel=sel[0], out=ocd3);
-    Mux(a=c[4], b=d[4], sel=sel[0], out=ocd4);
-    Mux(a=c[5], b=d[5], sel=sel[0], out=ocd5);
-    Mux(a=c[6], b=d[6], sel=sel[0], out=ocd6);
-    Mux(a=c[7], b=d[7], sel=sel[0], out=ocd7);
-    Mux(a=c[8], b=d[8], sel=sel[0], out=ocd8);
-    Mux(a=c[9], b=d[9], sel=sel[0], out=ocd9);
-    Mux(a=c[10], b=d[10], sel=sel[0], out=ocd10);
-    Mux(a=c[11], b=d[11], sel=sel[0], out=ocd11);
-    Mux(a=c[12], b=d[12], sel=sel[0], out=ocd12);
-    Mux(a=c[13], b=d[13], sel=sel[0], out=ocd13);
-    Mux(a=c[14], b=d[14], sel=sel[0], out=ocd14);
-    Mux(a=c[15], b=d[15], sel=sel[0], out=ocd15);
-
-    Mux(a=oab0, b=ocd0, sel=sel[1], out=out[0]);
-    Mux(a=oab1, b=ocd1, sel=sel[1], out=out[1]);
-    Mux(a=oab2, b=ocd2, sel=sel[1], out=out[2]);
-    Mux(a=oab3, b=ocd3, sel=sel[1], out=out[3]);
-    Mux(a=oab4, b=ocd4, sel=sel[1], out=out[4]);
-    Mux(a=oab5, b=ocd5, sel=sel[1], out=out[5]);
-    Mux(a=oab6, b=ocd6, sel=sel[1], out=out[6]);
-    Mux(a=oab7, b=ocd7, sel=sel[1], out=out[7]);
-    Mux(a=oab8, b=ocd8, sel=sel[1], out=out[8]);
-    Mux(a=oab9, b=ocd9, sel=sel[1], out=out[9]);
-    Mux(a=oab10, b=ocd10, sel=sel[1], out=out[10]);
-    Mux(a=oab11, b=ocd11, sel=sel[1], out=out[11]);
-    Mux(a=oab12, b=ocd12, sel=sel[1], out=out[12]);
-    Mux(a=oab13, b=ocd13, sel=sel[1], out=out[13]);
-    Mux(a=oab14, b=ocd14, sel=sel[1], out=out[14]);
-    Mux(a=oab15, b=ocd15, sel=sel[1], out=out[15]);
+    Mux16(a=a, b=b, sel=sel[0], out=ab);
+    Mux16(a=c, b=d, sel=sel[0], out=cd);
+    Mux16(a=ab, b=cd, sel=sel[1], out=out);
 }
