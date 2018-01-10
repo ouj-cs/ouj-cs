@@ -4,8 +4,12 @@
  */
 
 CHIP One16 {
+    IN in[16];
     OUT out[16];
 
     PARTS:
-    And16 (a=true, b[0]=true, b[1..15]=false, out=out);
+    Not16 (in=in, out=notin);
+    And16 (a=in, b=notin, out=false16);
+//    Or16 (a[0]=true, b=false, out=out);
+    Or16 (a[0]=true, b=false16, out=out);
 }
