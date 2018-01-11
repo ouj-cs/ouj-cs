@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+ </head>
+ <body>
+  <h1>coding the DFF<br>D型フリップフロップのコードを書く</h1>
+  <p><a href="http://nand2tetris-questions-and-answers-forum.32033.n3.nabble.com/coding-the-DFF-td93847.html">http://nand2tetris-questions-and-answers-forum.32033.n3.nabble.com/coding-the-DFF-td93847.html</a></p>
+  <p>Would it be possible to code the DFF in project 3, instead of use it as a built-in chip? I'm assuming this would require simulator changes, since when I tried to code it, I got "This chip has a circle in its parts connections." Also, can it be made so the chip can tap into the clock and use it as an input?<br>第3章のDFFのコードを書くことは可能でしょうか？　つまりビルトインのDFFチップを使うのではなく。思うに、これを行うためにはシミュレーターを変更する必要があると思っています。なぜなら、私がそのコードを書こうとしてみたところ、「このチップのパーツの接続にはループがあります」というエラーが表示されました。もう一つ質問なのですが、チップを実装する際に、クロックを入力として用いることはできますか？</p>
+  <hr>
+  <p>The answer is "no" and "no".<br>答えは「いいえ」と「いいえ」です。</p>
+  <p>It was a pedagogic decision to treat a DFF as atomic rather than build it from NAND gates as is commonly done.  The reasoning is that allowing loops in combinatorial logic gates requires deviating from their simple logical abstraction, complicating matters conceptually; similarly the temporal implications that this would allow would considerably complicate the simple abstraction of discrete time in sequential chips.<br>DFFを普通行われるようにNANDゲートらから構成するのではなく一つのものとして使うことは、教育のための判断です。そうした理由は、組み合わせ論理回路にループを許すと、簡単な論理的な抽象を逸脱して、概念を複雑にしてしまうからです。またそれを許せば時間的な意味を含んでしまうので、順序回路の離散時間の簡単な抽象化をひどく複雑にしてしまいます。</p>
+  <p>The simulator follows this decision and does not allow loops in combinatorial circuits (another "compilation-like" benefit of this decision).  The whole internal logic of the simulator uses this restriction in an essential way, and is different (and more efficient) than usual hardware simulators that allow combinatorial loops.  Similarly time is handled as a primitive by the simulator and there is no "clock" pin accessible from HDL.<br>シミュレータはこの判断に基づいており、組み合わせ回路にループを許しません。（この判断がもたらした利益の一つです。）　シミュレータの全ての内部ロジックはこの制約を不可欠なものとしていて、組み合わせのループを許す普通のハードウェアシミュレータとは異なりまたそれらより効率的です。同様に、時間はシミュレータによって基本的なものとして扱われるため、HDLからアクセス可能な言わば「クロック」ピンというものは存在しません。</p>
+  <hr>
+  <p>Ok, thanks.<br>わかりました。ありがとうございます。</p>
+  <hr>
+  <p>Dear Mr. Noam, I am sure you had good reasons for implementing the simulator this way, however, for someone that is struggling to understand how these bits and pieces work together, your answer is somewhat obscure, I already understand that it can't be implemented on the simulator however I can't discern your answer from "You shall not attempt to simulate the DFF on the simulator", in other words, I realize the answer is "No" and that there are good reasons for that but I still don't understand why at all. Please, provide us with a more simplified explanation of why.<br>Noam先生、シミュレータをあなたがこのように実装した理由があったことはよくわかりました。しかしこれらの要素がどう協調動作するのか理解するためにもがいている人々にとっては、その回答は曖昧なのでは。シミュレータでDFFを実装できないことはわかったのですが、あなたの回答はまるで「シミュレータでDFFをシミュレートしようと試みてはならない」と言っているように聞こえます。つまり、答えが「いいえ」であってそこに十分な理由があることはわかったのですが、「なぜ」かが全くわかりません。なぜなのかを端的に説明していただけたらありがたいです。</p>
+  <hr>
+  <p>Implementing DFF with Nand gates requires a feedback loop, meaning the output of a gate affects the input of that same gate.  This kind of interaction works automatically in reality but it is a challenge to implement in code.  By limiting DFFs to a primitive it is possible to greatly simplify the implementation of the hardware simulator.  Additionally, disallowing feedback loops in combinatorial circuits (Chapters 1 & 2) gives a side benefit of identifying a class of errors students make in their designs more readily.  It also greatly supports the key point of the text that computers are layers of abstraction built upon each other.<br>DFFをNandゲートらで実装するにはフィードバックループを用いる必要があり、そのためにはあるゲートの出力を同じゲートの入力に接続する必要があります。この種の相互作用は現実には自動的に行われますが、コードで実装するのは大変です。DFFを単位とすることで、ハードウェアシミュレータの実装をずっと単純化できます。それに、（１、２章の）組み合わせ回路についてフィードバックループを許さないことで、生徒達が回路を設計する際に生じるエラーの種類がわかりやすくなる効果もあります。またこのことは、コンピュータは積み重なる抽象的な層であるという本文の主旨を強く示しもする。</p>
+ </body>
+</html>
