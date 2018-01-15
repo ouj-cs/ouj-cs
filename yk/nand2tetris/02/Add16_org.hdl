@@ -15,8 +15,8 @@ CHIP Add16 {
     PARTS:
     // Put you code here:
     HalfAdder (a=a[0], b=b[0], sum=out[0], carry=carry0);
-    FullAdder (a=a[1], b=b[1], c=c1, sum=out[1], carry=carry1);
-    FullAdder (a=a[2], b=b[2], c=c2, sum=out[2], carry=carry2);
+    FullAdder (a=a[1], b=b[1], c=carry0, sum=out[1], carry=carry1);
+    FullAdder (a=a[2], b=b[2], c=carry1, sum=out[2], carry=carry2);
     FullAdder (a=a[3], b=b[3], c=carry2, sum=out[3], carry=carry3);
     FullAdder (a=a[4], b=b[4], c=carry3, sum=out[4], carry=carry4);
     FullAdder (a=a[5], b=b[5], c=carry4, sum=out[5], carry=carry5);
@@ -30,17 +30,4 @@ CHIP Add16 {
     FullAdder (a=a[13], b=b[13], c=carry12, sum=out[13], carry=carry13);
     FullAdder (a=a[14], b=b[14], c=carry13, sum=out[14], carry=carry14);
     FullAdder (a=a[15], b=b[15], c=carry14, sum=out[15], carry=null);
-    
-    // Carry Look Ahead
-    Not16 (in=a, out[0]=na0, out[1]=na1);
-    Not16 (in=b, out[0]=nb0, out[1]=nb1);
-    Or8Way (in[0]=na0, in[1]=nb0, out=nc1);
-    Not16 (in[0]=nc1, out[0]=c1);
-    
-    Or8Way (in[0]=na1, in[1]=nb1, out=c2x0);
-    Or8Way (in[0]=na1, in[1]=nc1, out=c2x1);
-    Or8Way (in[0]=nb1, in[1]=nc1, out=c2x2);
-    Not16 (in[0]=c2x0, in[1]=c2x1, in[2]=c2x2, out[0]=c2y0, out[1]=c2y1, out[2]=c2y2);
-    Or8Way (in[0]=c2y0, in[1]=c2y1, in[2]=c2y2, out=c2);
-    // ...
 }

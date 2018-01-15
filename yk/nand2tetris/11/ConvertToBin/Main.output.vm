@@ -1,0 +1,98 @@
+function Main.main 1
+push constant 8001
+push constant 16
+push constant 1
+neg
+call Main.fillMemory 3
+push constant 8000
+call Memory.peek 1
+pop local 0
+push local 0
+call Main.convert 1
+return
+function Main.convert 3
+push constant 1
+neg
+pop local 2
+label L0_begin_while
+push local 2
+not
+if-goto L1_end_while
+push local 1
+push constant 1
+add
+pop local 1
+push local 0
+call Main.nextMask 1
+pop local 0
+push local 1
+push constant 16
+gt
+not
+not
+if-goto L2_if_else
+push argument 0
+push local 0
+and
+push constant 0
+eq
+not
+not
+if-goto L4_if_else
+push constant 8000
+push local 1
+add
+push constant 1
+call Memory.poke 2
+goto L5_if_end
+label L4_if_else
+push constant 8000
+push local 1
+add
+push constant 0
+call Memory.poke 2
+label L5_if_end
+goto L3_if_end
+label L2_if_else
+push constant 0
+pop local 2
+label L3_if_end
+goto L0_begin_while
+label L1_end_while
+return
+function Main.nextMask 0
+push argument 0
+push constant 0
+eq
+not
+if-goto L6_if_else
+push constant 1
+return
+goto L7_if_end
+label L6_if_else
+push argument 0
+push constant 2
+call Math.multiply 2
+return
+label L7_if_end
+function Main.fillMemory 0
+label L8_begin_while
+push argument 1
+push constant 0
+gt
+not
+if-goto L9_end_while
+push argument 0
+push argument 2
+call Memory.poke 2
+push argument 1
+push constant 1
+sub
+pop argument 1
+push argument 0
+push constant 1
+add
+pop argument 0
+goto L8_begin_while
+label L9_end_while
+return

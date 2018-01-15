@@ -1,0 +1,190 @@
+function SquareGame.new 0
+push constant 2
+call Memory.alloc 1
+pop pointer 0
+push constant 0
+push constant 0
+push constant 30
+call Square.new 3
+pop this 0
+push constant 0
+pop this 1
+push pointer 0
+return
+function SquareGame.dispose 1
+push argument 0
+pop pointer 0
+push this 0
+call Square.dispose 1
+pop temp 0
+push pointer 0
+call Memory.deAlloc 1
+pop temp 0
+push constant 0
+return
+function SquareGame.moveSquare 1
+push argument 0
+pop pointer 0
+push this 1
+push constant 1
+eq
+not
+if-goto L0_if_else
+push this 0
+call Square.moveUp 1
+pop temp 0
+goto L1_if_end
+label L0_if_else
+label L1_if_end
+push this 1
+push constant 2
+eq
+not
+if-goto L2_if_else
+push this 0
+call Square.moveDown 1
+pop temp 0
+goto L3_if_end
+label L2_if_else
+label L3_if_end
+push this 1
+push constant 3
+eq
+not
+if-goto L4_if_else
+push this 0
+call Square.moveLeft 1
+pop temp 0
+goto L5_if_end
+label L4_if_else
+label L5_if_end
+push this 1
+push constant 4
+eq
+not
+if-goto L6_if_else
+push this 0
+call Square.moveRight 1
+pop temp 0
+goto L7_if_end
+label L6_if_else
+label L7_if_end
+push constant 5
+call Sys.wait 1
+pop temp 0
+push constant 0
+return
+function SquareGame.run 3
+push argument 0
+pop pointer 0
+push constant 0
+pop local 1
+label L8_begin_while
+push local 1
+not
+not
+if-goto L9_end_while
+label L10_begin_while
+push local 0
+push constant 0
+eq
+not
+if-goto L11_end_while
+call Keyboard.keyPressed 0
+pop local 0
+push pointer 0
+call SquareGame.moveSquare 1
+pop temp 0
+goto L10_begin_while
+label L11_end_while
+push local 0
+push constant 81
+eq
+not
+if-goto L12_if_else
+push constant 1
+neg
+pop local 1
+goto L13_if_end
+label L12_if_else
+label L13_if_end
+push local 0
+push constant 90
+eq
+not
+if-goto L14_if_else
+push this 0
+call Square.decSize 1
+pop temp 0
+goto L15_if_end
+label L14_if_else
+label L15_if_end
+push local 0
+push constant 88
+eq
+not
+if-goto L16_if_else
+push this 0
+call Square.incSize 1
+pop temp 0
+goto L17_if_end
+label L16_if_else
+label L17_if_end
+push local 0
+push constant 131
+eq
+not
+if-goto L18_if_else
+push constant 1
+pop this 1
+goto L19_if_end
+label L18_if_else
+label L19_if_end
+push local 0
+push constant 133
+eq
+not
+if-goto L20_if_else
+push constant 2
+pop this 1
+goto L21_if_end
+label L20_if_else
+label L21_if_end
+push local 0
+push constant 130
+eq
+not
+if-goto L22_if_else
+push constant 3
+pop this 1
+goto L23_if_end
+label L22_if_else
+label L23_if_end
+push local 0
+push constant 132
+eq
+not
+if-goto L24_if_else
+push constant 4
+pop this 1
+goto L25_if_end
+label L24_if_else
+label L25_if_end
+label L26_begin_while
+push local 0
+push constant 0
+eq
+not
+not
+if-goto L27_end_while
+call Keyboard.keyPressed 0
+pop local 0
+push pointer 0
+call SquareGame.moveSquare 1
+pop temp 0
+goto L26_begin_while
+label L27_end_while
+goto L8_begin_while
+label L9_end_while
+push constant 0
+return
