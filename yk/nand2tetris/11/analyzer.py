@@ -78,12 +78,12 @@ class JackTokenizer:
         is_inside = False
         s2 = ""
 
-        # Replaces spaces in string literals to an escape sequence.
+        # Replaces space in string literals with an escape sequence.
         for c in s:
             if c == '"':
                 is_inside = not is_inside
             if is_inside and c == " ":
-                s2 += "SPACEINSTRING"  # Replaces to an escape sequence.
+                s2 += "SPACEINSTRING"  # Replaces with an escape sequence.
             else:
                 s2 += c
 
