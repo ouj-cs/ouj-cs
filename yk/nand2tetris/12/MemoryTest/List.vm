@@ -1,0 +1,36 @@
+function List.getLength 0
+push constant 0
+push argument 0
+add
+pop pointer 1
+push that 0
+return
+function List.setLength 0
+push constant 0
+push argument 0
+add
+push argument 1
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 0
+return
+function List.getNext 0
+push constant 1
+push argument 0
+add
+pop pointer 1
+push that 0
+return
+function List.setNext 0
+push constant 1
+push argument 0
+add
+push argument 1
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 0
+return

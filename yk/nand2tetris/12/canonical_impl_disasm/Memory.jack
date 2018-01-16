@@ -1,0 +1,72 @@
+class Memory {
+    static int zero;
+    
+    function void init() {
+        let zero = 0;
+        let zero[2048] = 14334;  // Heap is from 2048 to 16383. (p. 307)
+        let zero[2049] = 2050;
+        return;
+    }
+
+    function int peek(int address) {
+        return zero[address];
+    }
+
+    function void poke(int address, int value) {
+        let zero[address] = value;
+        return;
+    }
+
+    function Array alloc(int size) {
+        var int seg;
+
+        if (size < 1) {
+            do Sys.error(5);
+        }
+
+        let seg = 2048;
+
+        while (seg[0] < size) {
+            let seg = seg[1];
+        }
+
+        if ((seg + size) > 16379) {
+            do Sys.error(6);
+        }
+
+        if (seg[0] > (size + 2)) {
+            let seg[size + 2] = seg[0] - size - 2;
+
+            if (seg[1] = (seg + 2)) {
+                let seg[size + 3] = seg + size + 4;
+            } else {
+                let seg[size + 3] = seg[1];
+            }
+
+            let seg[1] =  seg + size + 2;
+        }
+
+        let seg[0] = 0;
+        return seg + 2;
+    }
+
+    function void deAlloc(Array o) {
+        var int seg, next;
+        let seg = o - 2;
+        let next = seg[1];
+
+        if (next[0] = 0) {
+            let seg[0] = seg[1] - seg - 2;
+        } else {
+            let seg[0] = seg[1] - seg + next[0];
+
+            if (next[1] = (next + 2)) {
+                let seg[1] = seg + 2;
+            } else {
+                let seg[1] = next[1];
+            }
+        }
+
+        return;
+    }
+}

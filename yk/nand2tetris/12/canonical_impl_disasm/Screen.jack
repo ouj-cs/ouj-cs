@@ -1,0 +1,246 @@
+class Screen {
+    static Array twoToThe;
+    static int base;
+    static boolean color;
+
+    function void init() {
+        var int i;
+        let base = 16384;
+        let color = true;
+        let twoToThe = Array.new(17);
+        let twoToThe[0] = 1;
+
+        while (i < 16) {
+            let i = i + 1;
+            let twoToThe[i] = twoToThe[i - 1] + twoToThe[i - 1];
+        }
+
+        return;
+    }
+
+    function void clearScreen() {
+        var int i;
+
+        while (i < 8192) {
+            let base[i] = 0;
+            let i = i + 1;
+        }
+
+        return;
+    }
+
+    function void updateLocation(int word, int value) {
+        if (color) {
+            let base[word] = base[word] | value;
+        } else {
+            let base[word] = base[word] & ~value;
+        }
+
+        return;
+    }
+
+    function void setColor(boolean b) {
+        let color = b;
+        return;
+    }
+
+    function void drawPixel(int x, int y) {
+        var int wordCol, bit, word;
+
+        if ((x < 0) | (x > 511) | (y < 0) | (y > 255)) {
+            do Sys.error(7);
+        }
+
+        let wordCol = x / 16;
+        let bit = x - (wordCol * 16);
+        let word = (y * 32) + wordCol;
+        do Screen.updateLocation(word, twoToThe[bit]);
+        return;
+    }
+
+    function void drawConditional(int x, int y, int is_yx) {
+        if (is_yx) {
+            do Screen.drawPixel(y, x);
+        } else {
+            do Screen.drawPixel(x, y);
+        }
+
+        return;
+    }
+
+    function void drawLine(int x1, int y1, int x2, int y2) {
+        var int local0, local1, local2, local3, local4, local5;
+        var boolean local6, local7;
+        var int local8, local9, local10;
+
+        if ((x1 < 0) | (x2 > 511) | (y1 < 0) | (y2 > 255)) {
+            do Sys.error(8);
+        }
+
+        let local3 = Math.abs(x2 - x1);
+        let local2 = Math.abs(y2 - y1);
+        let local6 = local3 < local2;
+
+        if ((local6 & (y2 < y1)) | (~local6 & (x2 < x1))) {
+            let local4 = x1;
+            let x1 = x2;
+            let x2 = local4;
+            let local4 = y1;
+            let y1 = y2;
+            let y2 = local4;
+        }
+
+        if (local6) {
+            let local4 = local3;
+            let local3 = local2;
+            let local2 = local4;
+            let local1 = y1;
+            let local0 = x1;
+            let local8 = y2;
+            let local7 = x1 > x2;
+        } else {
+            let local1 = x1;
+            let local0 = y1;
+            let local8 = x2;
+            let local7 = y1 > y2;
+        }
+
+        let local5 = (2 * local2) - local3;
+        let local9 = 2 * local2;
+        let local10 = 2 * (local2 - local3);
+        do Screen.drawConditional(local1, local0, local6);
+
+        while (local1 < local8) {
+            if (local5 < 0) {
+                let local5 = local5 + local9;
+            } else {
+                let local5 = local5 + local10;
+
+                if (local7) {
+                    let local0 = local0 - 1;
+                } else {
+                    let local0 = local0 + 1;
+                }
+            }
+
+            let local1 = local1 + 1;
+            do Screen.drawConditional(local1, local0, local6);
+        }
+
+        return;
+    }
+
+    function void drawRectangle(int x1, int y1, int x2, int y2) {
+        var int local0, local1, local2, local3, local4, local5, local6, local7, local8;
+
+        if ((x1 > x2) | (y1 > y2) | (x1 < 0) | (x2 > 511) | (y1 < 0) | (y2 > 255)) {
+            do Sys.error(9);
+        }
+
+        let local3 = x1 / 16;
+        let local7 = x1 - (local3 * 16);
+        let local4 = x2 / 16;
+        let local8 = x2 - (local4 * 16);
+        let local6 = ~(twoToThe[local7] - 1);
+        let local5 = twoToThe[local8 + 1] - 1;
+        let local0 = (y1 * 32) + local3;
+        let local2 = local4 - local3;
+
+        while(~(y1 > y2)) {
+            let local1 = local0 + local2;
+
+            if (local2 = 0) {
+                do Screen.updateLocation(local0, local5 & local6);
+            } else {
+                do Screen.updateLocation(local0, local6);
+                let local0 = local0 + 1;
+
+                while (local0 < local1) {
+                    do Screen.updateLocation(local0, -1);
+                    let local0 = local0 + 1;
+                }
+
+                do Screen.updateLocation(local1, local5);
+            }
+
+            let y1 = y1 + 1;
+            let local0 = local1 + 32 - local2;
+        }
+
+        return;
+    }
+
+    function void drawHorizontal(int arg0, int arg1, int arg2) {
+        var int local0, local1, local2, local3, local4, local5, local6, local7, local8, local9, local10;
+        let local7 = Math.min(arg1, arg2);
+        let local8 = Math.max(arg1, arg2);
+
+        if ((arg0 > -1) & (arg0 < 256) & (local7 < 512) & (local8 > -1)) {
+            let local7 = Math.max(local7, 0);
+            let local8 = Math.min(local8, 511);
+            let local1 = local7 / 16;
+            let local9 = local7 - (local1 * 16);
+            let local2 = local8 / 16;
+            let local10 = local8 - (local2 * 16);
+            let local5 = ~(twoToThe[local9] - 1);
+            let local4 = twoToThe[local10 + 1] - 1;
+            let local0 = (arg0 * 32) + local1;
+            let local6 = local2 - local1;
+            let local3 = local0 + local6;
+
+            if (local6 = 0) {
+                do Screen.updateLocation(local0, local4 & local5);
+            } else {
+                do Screen.updateLocation(local0, local5);
+                let local0 = local0 + 1;
+
+                while (local0 < local3) {
+                    do Screen.updateLocation(local0, -1);
+                    let local0 = local0 + 1;
+                }
+
+                do Screen.updateLocation(local3, local4);
+            }
+        }
+
+        return;
+    }
+
+    function void drawSymetric(int arg0, int arg1, int arg2, int arg3) {
+        do Screen.drawHorizontal(arg1 - arg3, arg0 + arg2, arg0 - arg2);
+        do Screen.drawHorizontal(arg1 + arg3, arg0 + arg2, arg0 - arg2);
+        do Screen.drawHorizontal(arg1 - arg2, arg0 - arg3, arg0 + arg3);
+        do Screen.drawHorizontal(arg1 + arg2, arg0 - arg3, arg0 + arg3);
+        return;
+    }
+
+    function void drawCircle(int x, int y, int r) {
+        var int local0, local1, local2;
+
+        if ((x < 0) | (x > 511) | (y < 0) | (y > 255)) {
+            do Sys.error(12);
+        }
+
+        if (((x - r) < 0) | ((x + r) > 511) | ((y - r) < 0) | ((y + r) > 255)) {
+            do Sys.error(13);
+        }
+
+        let local1 = r;
+        let local2 = 1 - r;
+        do Screen.drawSymetric(x, y, local0, local1);
+
+        while (local1 > local0) {
+            if (local2 < 0) {
+                let local2 = local2 + (2 * local0) + 3;
+            } else {
+                let local2 = local2 + (2 * (local0 - local1)) + 5;
+                let local1 = local1 - 1;
+            }
+
+            let local0 = local0 + 1;
+            do Screen.drawSymetric(x, y, local0, local1);
+        }
+
+        return;
+    }
+}

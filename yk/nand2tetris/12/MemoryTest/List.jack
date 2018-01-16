@@ -1,0 +1,20 @@
+class List {
+    function int getLength(int segment) {
+        return segment[0];
+    }
+
+    function void setLength(int segment, int length) {
+        let segment[0] = length;
+        return;
+    }
+
+    function int getNext(int segment) {
+        return segment[1];
+    }
+
+    function void setNext(int segment, int next) {
+        let segment[1] = next;
+        return;
+    }
+}
+

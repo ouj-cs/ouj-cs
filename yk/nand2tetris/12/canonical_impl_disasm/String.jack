@@ -1,0 +1,163 @@
+class String {
+    // http://nand2tetris-questions-and-answers-forum.32033.n3.nabble.com/let-this-value-td4026483.html
+    field int maxLen;
+    field Array str;
+    field int cursor;
+
+    constructor String new(int maxLength) {
+        if (maxLength < 0) {
+            do Sys.error(14);
+        }
+
+        if (maxLength > 0) {
+            let str = Array.new(maxLength);
+        }
+
+        let maxLen = maxLength;
+        let cursor = 0;
+        return this;
+    }
+
+    method void dispose() {
+        if (maxLen > 0) {
+            do str.dispose();
+        }
+
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method int length() {
+        return cursor;
+    }
+
+    method char charAt(int j) {
+        if ((j < 0) | (j > cursor) | (j = cursor)) {
+            do Sys.error(15);
+        }
+
+        return str[j];
+    }
+
+    method void setCharAt(int j, char c) {
+        if ((j < 0) | (j > cursor) | (j = cursor)) {
+            do Sys.error(16);
+        }
+
+        let str[j] = c;
+        return;
+    }
+
+    method String appendChar(char c) {
+        if (cursor = maxLen) {
+            do Sys.error(17);
+        }
+
+        let str[cursor] = c;
+        let cursor = cursor + 1;
+        return this;
+    }
+
+    method void eraseLastChar() {
+        if (cursor = 0) {
+            do Sys.error(18);
+        }
+
+        let cursor = cursor - 1;
+        return;
+    }
+
+    method int intValue() {
+        var int i, result, n;
+        var boolean is_num, is_neg;
+
+        if (cursor = 0) {
+            return 0;
+        }
+
+        let is_num = true;
+
+        if (str[0] = 45) {
+            let is_neg = true;
+            let i = 1;
+        }
+
+        while ((i < cursor) & is_num) {
+            let n = str[i] - 48;
+            let is_num = ~((n < 0) | (n > 9));
+
+            if (is_num) {
+                let result = (result * 10) + n;
+                let i = i + 1;
+            }
+        }
+
+        if (is_neg) {
+            let result = -result;
+        }
+
+        return result;
+    }
+
+    method void setInt(int j) {
+        var int i, left;
+        var Array ss;
+        var boolean is_neg;
+
+        if (maxLen = 0) {
+            do Sys.error(19);
+        }
+
+        let ss = Array.new(6);
+
+        if (j < 0) {
+            let is_neg = true;
+            let j = -j;
+        }
+
+        let left = j;
+
+        while (left > 0) {
+            let left = j / 10;
+            let ss[i] = 48 + (j - (left * 10));
+            let i = i + 1;
+            let j = left;
+        }
+
+        if (is_neg) {
+            let ss[i] = 45;  // Character "-".
+            let i = i + 1;
+        }
+
+        if (maxLen < i) {
+            do Sys.error(19);
+        }
+
+        if (i = 0) {
+            let str[0] = 48;  // Character "0".
+            let cursor = 1;
+        } else {
+            let cursor = 0;
+
+            while (cursor < i) {
+                let str[cursor] = ss[i - (cursor + 1)];
+                let cursor = cursor + 1;
+            }
+        }
+
+        do ss.dispose();
+        return;
+    }
+
+    function char newLine() {
+        return 128;
+    }
+
+    function char backSpace() {
+        return 129;
+    }
+
+    function char doubleQuote() {
+        return 34;
+    }
+}
