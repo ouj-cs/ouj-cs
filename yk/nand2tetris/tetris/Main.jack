@@ -430,7 +430,7 @@ class Main {
         return;
     }
 
-    function boolean contains(String s, char c) {  // Counts c in s.
+    function boolean contains(String s, char c) {  // Searches c in s.
         var int i, len;
         let len = s.length();
 
@@ -445,19 +445,19 @@ class Main {
         return false;
     }
 
-    function void eraseLine(int i) {  // Erases the nth line.
-        do String.dispose(ss_bg[i]);
+    function void eraseLine(int n) {  // Erases the nth line.
+        do String.dispose(ss_bg[n]);
 
-        while (i > 1) {
-            let ss_bg[i] = ss_bg[i - 1];
-            let i = i - 1;
+        while (n > 1) {
+            let ss_bg[n] = ss_bg[n - 1];
+            let n = n - 1;
         }
 
         let ss_bg[1] = "#          #";  // Adds a new line on top.
         return;
     }
 
-    function int updateLines() {  // Returns the number of erased line.
+    function int updateLines() {  // Returns the number of erased lines.
         var int i, sum;
         let i = 1;
 
