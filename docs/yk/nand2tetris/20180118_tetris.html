@@ -1,39 +1,39 @@
 <!doctype html>
 <html>
- <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
- </head>
- <body>
-  <h1>テトリス実装例</h1>
-  <h4>画面</h4>
-  <img src="20180118_tetris.png"></img>
-  <h4>解説</h4>
-  <ul>
-   <li>通称nand2tetrisとのことなのでテトリスを実装しておきます。</li>
-   <ul>
-    <li>Jack言語で実装します。</li>
-   </ul>
-   <li>Wikipediaによると、7種類のブロックと20x10マスの盤面を用いるのが標準のようです。よって、そうしました。</li>
-   <li>OSのArrayクラスとStringクラスを用いて、ブロックの状態を文字列のリストとして表します。安易ですが、もっと凝った場合よりもコードを短くできると思います。</li>
-   <li>盤面の外周に外枠を設けます。これによってブロックの衝突判定を簡単にします。（番兵法）</li>
-   <ul>
-    <li>ただし、素朴に回転すると2マス溢れる場合があるようで、しかし外枠を2マスにして直接表示すると絵的に邪魔なので、危うい実装になっています。</li>
-   </ul>
-   <li>行を満たすと得点になります。得点を得ていくとレベルが上がり、ブロックの落下速度が増加します。</li>
-   <ul>
-    <li>消し残しが上まで詰まってしまったらゲームオーバーです。</li>
-   </ul>
-   <li>表示部分を拡張すれば、文字ではなくより凝った表示も可能かと思います。</li>
-   <li>OSの制約により、音声はありません。</li>
-  </ul>
-  <h4>コード</h4>
-  <ul>
-   <li>500行弱です。</li>
-   <li>最新のコードは次の辺りにあります。<a href="https://github.com/ouj-cs/ouj-cs/blob/master/yk/nand2tetris/09/Tetris/Main.jack">https://github.com/ouj-cs/ouj-cs/blob/master/yk/nand2tetris/09/Tetris/Main.jack</a></li>
-  </ul>
-  <pre><code>class Main {
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+  </head>
+  <body>
+    <h1>テトリス実装例</h1>
+    <h4>画面</h4>
+    <img src="20180118_tetris.png"></img>
+    <h4>解説</h4>
+    <ul>
+      <li>通称nand2tetrisとのことなのでテトリスを実装しておきます。</li>
+      <ul>
+        <li>Jack言語で実装します。</li>
+      </ul>
+      <li>Wikipediaによると、7種類のブロックと20x10マスの盤面を用いるのが標準のようです。よって、そうしました。</li>
+      <li>OSのArrayクラスとStringクラスを用いて、ブロックの状態を文字列のリストとして表します。安易ですが、もっと凝った場合よりもコードを短くできると思います。</li>
+      <li>盤面の外周に外枠を設けます。これによってブロックの衝突判定を簡単にします。（番兵法）</li>
+      <ul>
+        <li>ただし、素朴に回転すると2マス溢れる場合があるようで、しかし外枠を2マスにして直接表示すると絵的に邪魔なので、危うい実装になっています。</li>
+      </ul>
+      <li>行を満たすと得点になります。得点を得ていくとレベルが上がり、ブロックの落下速度が増加します。</li>
+      <ul>
+        <li>消し残しが上まで詰まってしまったらゲームオーバーです。</li>
+      </ul>
+      <li>表示部分を拡張すれば、文字ではなくより凝った表示も可能かと思います。</li>
+      <li>OSの制約により、音声はありません。</li>
+    </ul>
+    <h4>コード</h4>
+    <ul>
+      <li>500行弱です。</li>
+      <li>最新のコードは次の辺りにあります。<a href="https://github.com/ouj-cs/ouj-cs/blob/master/yk/nand2tetris/09/Tetris/Main.jack">https://github.com/ouj-cs/ouj-cs/blob/master/yk/nand2tetris/09/Tetris/Main.jack</a></li>
+    </ul>
+    <pre><code>class Main {
     static int TOP, LEFT, H, W, BLOCK, rand, speed;
     static Array ss_bg, ss_buf, ss_now, ss_try, ss_next, ss_tmp;
     static Array sss_blocks;
@@ -508,5 +508,5 @@
         return sum;
     }
 }</code></pre>
- </body>
+  </body>
 </html>

@@ -1,62 +1,62 @@
 <!doctype html>
 <html>
- <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
- </head>
- <body>
-  <h1>nand2tetris</h1>
-  <ul>
-   <li><a href="chapter03_dff.html">chapter03_dff.html</a></li>
-  </ul>
-  <h4>FAQ</h4>
-  <ul>
-   <li>Hardware Simulatorでメッセージの一部しか見えない。</li>
-   <ul>
-    <li>メッセージにマウスカーソルを合わせているとツールチップ表示されます。</li>
-   </ul>
-   <li>HDLプログラムで内部ピンを添字で分割したい。</li>
-   <ul>
-    <li>できません。ゲートの出力に添字を用いて、そもそも適切なビット幅の内部ピンを定義しましょう。</li>
-   </ul>
-   <li>用意されているチップのピンの名前の一覧が欲しい。</li>
-   <ul>
-    <li>ウェブにあるHDL Survival Guideという文書にThe Hack chip-set APIという項があります。</li>
-   </ul>
-   <li>HDLプログラムで、チップに定数（0か1）を入力したい。</li>
-   <ul>
-    <li>「false」や「true」と書き込むことで可能です。例えば Not (in=true, out=mydata) などとできます。テキスト付録 A p. 326 に例が記載されています。</li>
-   </ul>
-  </ul>
-  <h4>p. 7 - 4ゲートXor</h4>
-  <ul>
-   <li>テキストp. 7で、</li>
-   <li>「Xor関数はAnd、Or、Notゲートを計4つ用いれば実装できる（例で示した実装方法はゲートを5つ使用している）。」</li>
-   <li>とある点が話題になりました。</li>
-   <li>そもそも、Xorの正準表現 (canonical representation) は \(\bar{a}b+a\bar{b}\) であり、その素朴な実装は p. 8 の図の通りです。しかしこれだとゲートが5つだということですね。</li>
-   <li>英語版<a href="https://en.wikipedia.org/wiki/XOR_gate">Wikipedia</a>に説明があるように、4ゲートでの実装は次の図のようになります。<br><img src="https://upload.wikimedia.org/wikipedia/commons/a/a2/254px_3gate_XOR.jpg"></li>
-   <li>実際に式の変形を示せます。
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+  </head>
+  <body>
+    <h1>nand2tetris</h1>
+    <ul>
+      <li><a href="chapter03_dff.html">chapter03_dff.html</a></li>
+    </ul>
+    <h4>FAQ</h4>
+    <ul>
+      <li>Hardware Simulatorでメッセージの一部しか見えない。</li>
+      <ul>
+        <li>メッセージにマウスカーソルを合わせているとツールチップ表示されます。</li>
+      </ul>
+      <li>HDLプログラムで内部ピンを添字で分割したい。</li>
+      <ul>
+        <li>できません。ゲートの出力に添字を用いて、そもそも適切なビット幅の内部ピンを定義しましょう。</li>
+      </ul>
+      <li>用意されているチップのピンの名前の一覧が欲しい。</li>
+      <ul>
+        <li>ウェブにあるHDL Survival Guideという文書にThe Hack chip-set APIという項があります。</li>
+      </ul>
+      <li>HDLプログラムで、チップに定数（0か1）を入力したい。</li>
+      <ul>
+        <li>「false」や「true」と書き込むことで可能です。例えば Not (in=true, out=mydata) などとできます。テキスト付録 A p. 326 に例が記載されています。</li>
+      </ul>
+    </ul>
+    <h4>p. 7 - 4ゲートXor</h4>
+    <ul>
+      <li>テキストp. 7で、</li>
+      <li>「Xor関数はAnd、Or、Notゲートを計4つ用いれば実装できる（例で示した実装方法はゲートを5つ使用している）。」</li>
+      <li>とある点が話題になりました。</li>
+      <li>そもそも、Xorの正準表現 (canonical representation) は \(\bar{a}b+a\bar{b}\) であり、その素朴な実装は p. 8 の図の通りです。しかしこれだとゲートが5つだということですね。</li>
+      <li>英語版<a href="https://en.wikipedia.org/wiki/XOR_gate">Wikipedia</a>に説明があるように、4ゲートでの実装は次の図のようになります。<br><img src="https://upload.wikimedia.org/wikipedia/commons/a/a2/254px_3gate_XOR.jpg"></li>
+      <li>実際に式の変形を示せます。
 $$ \begin{align}
 \overline{ab}(a + b) &= \overline{ab}a + \overline{ab}b && (\because \ a(b + c) = ab + ac)\\
 &= (\bar{a} + \bar{b})a +  (\bar{a} + \bar{b})b && (\because \ \overline{ab} = \bar{a}+\bar{b})\\
 &= \bar{a}a + \bar{b}a + \bar{a}b + \bar{b}b && (\because \ ab = ba \ \land \ a(b + c) = ab + ac) \\
 &= \bar{a}b+a\bar{b} && (\because \ a\bar{a} = 0) \\
 \end{align}$$
-   </li>
-   <li>この（逆方向の）式変形を機械的に得ることは難しいように感じますが、次のような真理値表表現から考えるとこの結論にさほど不思議はないそうです。<br>
-    <table border=1>
-     <tr><th>\(a\)</th><th>\(b\)</th><th>\(ab\)</th><th>\(\overline{ab}\)</th><th>\(a + b\)</th><th>\(\overline{ab}(a + b)\)</th></tr>
-     <tr><td>\(0\)</td><td>\(0\)</td><td>\(0\)</td><td>\(1\)</td><td>\(0\)</td><td>\(0\)</td></tr>
-     <tr><td>\(0\)</td><td>\(1\)</td><td>\(0\)</td><td>\(1\)</td><td>\(1\)</td><td>\(1\)</td></tr>
-     <tr><td>\(1\)</td><td>\(0\)</td><td>\(0\)</td><td>\(1\)</td><td>\(1\)</td><td>\(1\)</td></tr>
-     <tr><td>\(1\)</td><td>\(1\)</td><td>\(1\)</td><td>\(0\)</td><td>\(1\)</td><td>\(0\)</td></tr>
-    </table>
-   </li>
-  </ul>
-  <h4>おまけ・ネタバレ・ヒント</h4>
-  <ul>
-   <li><a href="20180118_tetris.html">20180118_tetris.html</a></li>
-  </ul>
- </body>
+      </li>
+      <li>この（逆方向の）式変形を機械的に得ることは難しいように感じますが、次のような真理値表表現から考えるとこの結論にさほど不思議はないそうです。<br>
+        <table border=1>
+          <tr><th>\(a\)</th><th>\(b\)</th><th>\(ab\)</th><th>\(\overline{ab}\)</th><th>\(a + b\)</th><th>\(\overline{ab}(a + b)\)</th></tr>
+          <tr><td>\(0\)</td><td>\(0\)</td><td>\(0\)</td><td>\(1\)</td><td>\(0\)</td><td>\(0\)</td></tr>
+          <tr><td>\(0\)</td><td>\(1\)</td><td>\(0\)</td><td>\(1\)</td><td>\(1\)</td><td>\(1\)</td></tr>
+          <tr><td>\(1\)</td><td>\(0\)</td><td>\(0\)</td><td>\(1\)</td><td>\(1\)</td><td>\(1\)</td></tr>
+          <tr><td>\(1\)</td><td>\(1\)</td><td>\(1\)</td><td>\(0\)</td><td>\(1\)</td><td>\(0\)</td></tr>
+        </table>
+      </li>
+    </ul>
+    <h4>おまけ・ネタバレ・ヒント</h4>
+    <ul>
+      <li><a href="20180118_tetris.html">20180118_tetris.html</a></li>
+    </ul>
+  </body>
 </html>
