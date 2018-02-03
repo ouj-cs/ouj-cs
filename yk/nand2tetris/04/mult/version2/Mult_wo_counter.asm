@@ -3,10 +3,6 @@
 // where R0 >= 0 and R1 >= 0 and R0 * R1 < 32768.
     @R2     // R2 := 0
     M=0
-    @15     // count := 15
-    D=A
-    @count
-    M=D
     @mask   // mask := 1
     M=1
 (LOOP)
@@ -27,9 +23,7 @@
     @R1     // R1 = 2 * R1
     D=M
     M=D+M
-    @count  // count := count - 1
-    M=M-1
-    @count  // if count != 0 then goto LOOP
+    @mask   // if mask != 0 then goto LOOP
     D=M
     @LOOP
     D;JNE
