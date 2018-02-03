@@ -29,12 +29,10 @@
     M=D+M
     @count  // count := count - 1
     M=M-1
-    @count  // if count = 0 then goto END
+    @count  // if count != 0 then goto LOOP
     D=M
-    @END
-    D;JEQ
-    @LOOP   // goto LOOP
-    0;JMP
+    @LOOP
+    D;JNE
 (END)
-    @END
+    @END    // goto END
     0;JMP

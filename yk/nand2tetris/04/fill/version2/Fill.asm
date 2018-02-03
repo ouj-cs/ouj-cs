@@ -4,12 +4,10 @@
     D=A
     @pen
     M=D
-    @KBD        // if KBD = 0 then goto FILL_WHITE
+    @KBD        // if KBD != 0 then goto FILL_BLACK
     D=M
-    @FILL_WHITE
-    D;JEQ
-    @FILL_BLACK // goto FILL_BLACK
-    0;JMP
+    @FILL_BLACK
+    D;JNE
 (FILL_WHITE)
     @pen        // Memory[pen] := 0
     A=M

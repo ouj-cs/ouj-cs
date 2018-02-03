@@ -23,12 +23,10 @@
     @R1     // R1 = 2 * R1
     D=M
     M=D+M
-    @mask   // if mask = 0 then goto END
+    @mask   // if mask != 0 then goto LOOP
     D=M
-    @END
-    D;JEQ
-    @LOOP   // goto LOOP
-    0;JMP
+    @LOOP
+    D;JNE
 (END)
-    @END
+    @END    // goto END
     0;JMP
