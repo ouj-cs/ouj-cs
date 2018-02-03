@@ -3,7 +3,7 @@
 // where R0 >= 0 and R1 >= 0 and R0 * R1 < 32768.
     @R2     // R2 := 0
     M=0
-    @16     // count := 16
+    @15     // count := 15
     D=A
     @count
     M=D
@@ -30,7 +30,7 @@
     @count  // count := count - 1
     M=M-1
     @count  // if count = 0 then goto END
-    D=A
+    D=M
     @END
     D;JEQ
     @LOOP   // goto LOOP
