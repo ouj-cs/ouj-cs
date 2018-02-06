@@ -29,6 +29,23 @@
         <li>「false」や「true」と書き込むことで可能です。例えば Not (in=true, out=mydata) などとできます。テキスト付録 A p. 326 に例が記載されています。</li>
       </ul>
     </ul>
+    <h4>章と言語</h4>
+    <p>一部の章では、任意の言語による実装が可能です。</p>
+    <table border=1>
+      <tr><th>章</th><th>概要</th><th>実装言語</th></tr>
+      <tr><td>1</td><td>And回路等を実装する</td><td>.hdl</td></tr>
+      <tr><td>2</td><td>ALU等を実装する</td><td>.hdl</td></tr>
+      <tr><td>3</td><td>DFFを利用した順序回路</td><td>.hdl</td></tr>
+      <tr><td>4</td><td>.asmに親しむ</td><td>.asm</td></tr>
+      <tr><td>5</td><td>CPUを構築する</td><td>.hdl</td></tr>
+      <tr><td>6</td><td>.asm→.hackの実装</td><td>任意</td></tr>
+      <tr><td>7</td><td>.vm→.asmの実装（前半）</td><td>任意</td></tr>
+      <tr><td>8</td><td>.vm→.asmの実装（後半）</td><td>任意</td></tr>
+      <tr><td>9</td><td>.jackに親しむ</td><td>.jack</td></tr>
+      <tr><td>10</td><td>.jack構文解析</td><td>任意</td></tr>
+      <tr><td>11</td><td>.jack→.vmの実装</td><td>任意</td></tr>
+      <tr><td>12</td><td>標準ライブラリを実装する</td><td>.jack</td></tr>
+    </table>
     <h4>p. 7 - 4ゲートXor</h4>
     <ul>
       <li>テキストp. 7で、</li>
@@ -53,6 +70,21 @@ $$ \begin{align}
           <tr><td>\(1\)</td><td>\(1\)</td><td>\(1\)</td><td>\(0\)</td><td>\(1\)</td><td>\(0\)</td></tr>
         </table>
       </li>
+    </ul>
+    <h4>p. 56 - D型フリップフロップ</h4>
+    <ul>
+      <li>DFFについては、テキストに、out(t)=in(t-1)なものとして概説があります。その具体的な回路の例は、Wikipediaにあるように、次のようなものです。<br><img src="https://upload.wikimedia.org/wikipedia/commons/3/37/D-Type_Flip-flop_Diagram.svg"></li>
+    </ul>
+    <h4>p. 80 - Fill.asm</h4>
+    <ul>
+      <li>テストできます。</li>
+      <ul>
+        <li>テキストに「このプログラムのためにテストスクリプト (Fill.tst) はあるが、比較的ファイルは容易されていない―シミュレートされるスクリーンを目で見て確認してほしい。」と書いてあります。しかし実際には、 FillAutomatic.tst が提供されていて、比較的ファイル FillAutomatic.cmp も存在するので、テストできます。</li>
+      </ul>
+      <li>高速にシミュレートできます。</li>
+      <ul>
+        <li>CPUEmulator で、「Animate:」から「No animation」を選択すれば、（デフォルトの Program flow を選択した状態よりも）ずっと高速にシミュレートできます。他のシミュレータでも同様です。</li>
+      </ul>
     </ul>
     <h4>おまけ・ネタバレ・ヒント</h4>
     <ul>
