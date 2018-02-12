@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <link href="https://fonts.googleapis.com/css?family=Lilita+One" rel="stylesheet"> 
+  </head>
+  <body>
+    <h1>プロフィール画像について</h1>
+    <h3>2018-02-12 Monday</h3>
+    <ul>
+      <li>GitHubのプロフィール画像を設定しました。その際に行ったsvg画像の生成について、例を記載しておきます。</li>
+      <li>デフォルトでは次のものでした。いかにもデフォルトという感じです。<br><img src="https://github.com/identicons/ouj-cs.png"></li>
+      <li>svgタグで自作してみます。<br>
+        <svg style="font-family: 'Lilita One'" width="420" height="420">
+          <defs>
+            <linearGradient id="gradient0" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="Blue" />
+              <stop offset="100%" stop-color="Navy" />
+            </linearGradient>
+          </defs>
+          <rect x="0" y="0" width="420" height="420" fill="url(#gradient0)" />
+          <text fill="White" font-size="200" x="25" y="190">OUJ</text>
+          <text fill="White" font-size="200" x="100" y="370">CS</text>
+        </svg>
+      </li>
+      <li>HTML文書内のsvg要素として画像を作成したので、ウェブフォントを利用できました。</li>
+      <li>縮小表示されても判読できるように、このようなデザインにしてみました。</li>
+      <li>ウェブブラウザに表示されたsvg画像をpng画像として保存したいところですが、普通できないと思います。ですから、スクリーンショットを撮影した上で、画像編集ソフトウェア(gimp)を用いてトリミングしました。</li>
+    </ul>
+  </body>
+</html>
