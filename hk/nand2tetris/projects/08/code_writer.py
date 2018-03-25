@@ -5,6 +5,8 @@ class CodeWriter:
     def __init__(self, output_file):
         self.f = open(output_file, "w")
         self.count = 0
+        self.index = 0
+        self.filename = ""
         return
 
     def setFileName(self, fileName):
@@ -195,7 +197,6 @@ class CodeWriter:
             self.f.write("M=D\n")
         return
 
-    # implemented(ok)
     def writeInit(self):
         self.f.write("@256\n")
         self.f.write("D=A\n")
@@ -203,23 +204,20 @@ class CodeWriter:
         self.f.write("M=D\n")
         # LC, ARG, THIS, THATの初期値は何でも良いと思われる
 
-        # self.writeCall("Sys.init", 0)
-        self.f.write("@Sys.init\n")
-        self.f.write("0;JMP\n")
+        self.writeCall("Sys.init", 0)
+        # self.f.write("@Sys.init\n")
+        # self.f.write("0;JMP\n")
         return
 
-    # implemented(ok)
     def writeLabel(self, label):
         self.f.write("(%s) //writeLabel\n" % label)
         return
 
-    # implemented(ok)
     def writeGoto(self, label):
         self.f.write("@%s //writeGoto\n" % label)
         self.f.write("0;JMP\n")
         return
 
-    # implemented(ok)
     def writeIf(self, label):
         self.f.write("@SP //writeIf\n")
         self.f.write("M=M-1\n")
@@ -229,7 +227,6 @@ class CodeWriter:
         self.f.write("D;JNE\n")
         return
 
-    # implemented(おそらくok2)
     def writeFunction(self, functionName, numLocals):
         label_function = functionName
         self.f.write("(%s) //writeFunction\n" % label_function)
@@ -241,11 +238,11 @@ class CodeWriter:
             self.f.write("M=M+1\n")
         return
 
-    # implemented(おそらくok2)
     def writeCall(self, functionName, numArgs):
         label_function = functionName
 
-        return_address = "%s.%s.return_address" % (self.filename, label_function)
+        return_address = "%s.%s.%d.return_address" % (self.filename, label_function, self.index)
+        self.index += 1
         # push return_address
         self.f.write("@%s // push %s\n" % (return_address, return_address))
         self.f.write("D=A\n")
@@ -276,14 +273,6 @@ class CodeWriter:
         self.f.write("D=A\n")
         self.f.write("@ARG\n")
         self.f.write("M=D\n")
-        # self.f.write("@SP\n")
-        # self.f.write("D=M\n")
-        # self.f.write("@%d\n" % numArgs)
-        # self.f.write("D=D-A //SP - %d\n" % numArgs)
-        # self.f.write("@5\n")
-        # self.f.write("D=D-A\n")
-        # self.f.write("@ARG\n")
-        # self.f.write("M=D\n")
         # LCL = SP
         self.f.write("@SP\n")
         self.f.write("D=M\n")
@@ -305,7 +294,6 @@ class CodeWriter:
         self.f.write("M=M+1\n")
         return
 
-    # implemented(おそらくok2)
     def writeReturn(self):
         self.f.write("@LCL //writeReturn\n")
         self.f.write("D=M\n")   # value of LCL
@@ -369,7 +357,6 @@ class CodeWriter:
         self.f.write("0;JMP\n")
         return
 
-    # implemented
     def close(self):
         self.f.close()
         return
