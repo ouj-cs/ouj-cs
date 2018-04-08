@@ -1,0 +1,453 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+  </head>
+  <body>
+  <h1>Google Code Jam 2018 - Qualification Round についての公式解説の抄訳</h1>
+
+<h4>Saving The Universe Again<br>再び宇宙を救う</h4>
+<h3>Test set 1</h3>
+<p>
+  Since there is at most one <code>C</code> instruction in this test set, we
+  can solve the two cases independently.<br>
+  このテストセットにおいてはC命令の数は高々1個であるため、それぞれの場合を独立に解くことができる。
+</p>
+<p>
+  If there is no <code>C</code> instruction in <b>P</b>, then none of our swaps
+  will have any effect, so all we can do is check whether the damage of the
+  beam exceeds <b>D</b>.<br>
+  もしPにC命令が含まれなかったならば、どう交換しようとも何の影響もない。だから、できることといえば、ビームのダメージがDを超えるかどうか調べることだけである。
+</p>
+<p>
+  If there is one <code>C</code> instruction in <b>P</b>, then we can try every
+  possible position for the <code>C</code> instruction in the program. Assuming
+  that there is at least one position for the <code>C</code> instruction that
+  causes the total damage not to exceed <b>D</b>, we can choose the scenario
+  that requires the fewest swaps; the number of required swaps for a scenario
+  is equal to the distance between the original and final positions of the
+  <code>C</code> instruction.<br>
+  もしPに1個のC命令があったならば、プログラム中でC命令のありうる全ての位置について試すことができる。合計ダメージがDを超えないようなC命令の位置が少なくとも1個存在するという仮定のもとでは、交換回数が最小になるシナリオを選ぶことができる。つまり、必要な交換の回数は、C命令が元々あった位置と最後にある位置との距離に等しい。
+</p>
+<h3>Test set 2</h3>
+<p>
+  To solve test set 2, we will first derive a formula to compute the total
+  damage based on the positions of the <code>C</code> and <code>S</code>
+  instructions in <b>P</b>. Let N<sub>C</sub> and N<sub>S</sub> be the number of
+  <code>C</code> and <code>S</code> instructions in <b>P</b>, respectively.
+  Let C<sub>i</sub> be the number of <code>S</code> instructions to the right of
+  the i-th <code>C</code> instruction, where i uses 1-based indexing.<br>
+  テストセット2を解くためにはまず、PにおけるC命令とS命令の位置に応じて合計ダメージを算出する式を導かねばならない。N_CとN_Sをそれぞれ、PにおけるC命令とS命令の個数とする。iを1から始まる添字として、C_iを、i番目のC命令の右側にあるS命令の個数とする。
+</p>
+<p>
+  Note that the i-th <code>C</code> instruction will increase the damage of the
+  subsequent beams by 2<sup>i-1</sup>. For example, in the input program
+  <code>CSSCSSCSS</code>, initially, all of the <code>S</code> instructions will
+  inflict a damage of 1. Consider the damage dealt by the last <code>S</code>
+  instruction. Since the robot has been charged twice, the damage output by the
+  last instruction will be 4. Alternatively, we see that the damage, 4 = 1
+  (initial damage) + 2<sup>0</sup> (damage caused by the first <code>C</code>)
+  + 2<sup>1</sup> (damage caused by the second <code>C</code>). By breaking
+  down the damage by each <code>S</code> instruction in the same manner, the
+  total damage output, D, of the input program is given by:<br>
+  i番目のC命令がその後に起こるビームのダメージを2^{i-1}だけ増加させることに注意しよう。例えば、入力プログラムがCSSCSSCSSであるとき、当初は、全てのS命令はダメージ1を与える。最後のS命令がもたらすダメージについて考えよう。ロボットは2回チャージしたのだから、最後の命令によるダメージは4になる。別の見方をすると、そのダメージ4は、初期ダメージ1と、最初のC命令によるダメージ2^0と、2個目のC命令によるダメージ2^1の和である。それぞれのS命令によるダメージを同じようにして分解すると、ある入力プログラムの合計ダメージ出力Dは次の式で与えられる。
+</p>
+<pre>  D = N<sub>S</sub> + C<sub>1</sub> × 1 + C<sub>2</sub> × 2 + ... + C<sub>N<sub>C</sub></sub> × 2<sup>N<sub>C</sub> - 1 </sup>.
+</pre>
+<p>
+  Next, we investigate how each swap affects the amount of damage. A swap on
+  adjacent characters which are the same will not affect the equation. When we
+  swap the i-th <code>C</code> instruction with a <code>S</code> instruction to
+  its right, the value of C<sub>i</sub> will decrease by 1 since now there is
+  one less S than before. On the other hand, swapping the i-th <code>C</code>
+  instruction with an <code>S</code> instruction on its left will increase the
+  value of C<sub>i</sub> by 1. Note that in either case, we will only modify
+  the value of C<sub>i</sub>, and the other C values will remain the same. This
+  suggests that we should only ever swap adjacent instructions of the form
+  <code>CS</code>.<br>
+  次に、それぞれの交換が合計ダメージにどう影響するか調べる。隣接する同じ文字同士の交換は上の等式に影響しない。i番目のC命令とその右にあるS命令を交換した場合には、右側にあるSが1個減少するから、C_iは1だけ減る。一方、i番目のC命令を左側のS命令と交換したなら、C_iは1増加する。このどちらの場合にも、変化するのはC_iだけであり、他のCの値らは変化しない。このことは、交換する必要があるのは、CSという形で隣接している命令だけだということを意味している。
+</p>
+<p>
+  Therefore, executing M swaps is equivalent to reducing the values of
+  C<sub>i</sub>s such that the total amount of reduction across all
+  C<sub>i</sub>s is M. We want the total damage (according to the above
+  equation) to be minimized. Clearly, we should reduce the values of
+  C<sub>i</sub> that contribute to the largest damage output, while making sure
+  that each of the C<sub>i</sub>s is nonnegative.<br>
+  よって、M回交換することは、全てのC_iの減少量の合計がMとなるようにC_iらの値を減少させることと等しい。私達にとっては、（上の等式で表される）合計ダメージが最小であることが好ましい。それぞれのC_iが負数にならないようにしつつ、最も大きくダメージ出力に貢献しているC_iを私達が減少させるべきことは明らかだ。
+</p>
+<p>
+  Intuitively, all of this math boils down to a very simple algorithm! As long
+  as there is an instance of <code>CS</code> in the current program, we always
+  swap the latest (rightmost) instance. After each swap, we can recompute the
+  damage and check whether it is still more than <b>D</b>. If it is not, then
+  we can terminate the program. If we ever run out of instances of
+  <code>CS</code> to swap, but the damage that the program will cause is still
+  more than <b>D</b>, then the universe is doomed.<br>
+  直観的には、ここで数学的に述べたことは、とても単純なアルゴリズムに帰着できる。現在のプログラムにCSがある限りにおいて、最後の（最も右にある）ものを交換する。それぞれの交換ののち、私達は、ダメージを再計算し、ダメージがまだDを超えているかどうか調べる。もしそうでなければ、プログラムを終了することができる。もし、交換できるCSがこれ以上なく、プログラムがもたらすダメージがまだDより大きいならば、宇宙には未来がないということになる。
+</p>
+
+<h4>Trouble Sort<br>トラブルソート</h4>
+<h3>Test set 1</h3>
+<p>
+  Like bubble sort, Trouble Sort has O(<b>N</b><sup>2</sup>) time complexity; the proof is explained
+  below. With <b>N</b> ≤ 100 for test set 1, we can run Trouble Sort to completion and simply iterate
+  over the result list to find the first sorting error, if any (that is, a value that is greater
+  than the value that follows it in the list).<br>
+  バブルソートと同様に、トラブルソートの時間計算量はO(N^2)である。証明は下記。テストセット1のN &lt;= 100の場合については、トラブルソートを実行し、結果のリストを走査して、存在しうる整列エラーを探すことができる。ある値が右にある値よりも大きければエラーである。
+</p>
+<h3>Test set 2</h3>
+<p>
+  Running O(<b>N</b><sup>2</sup>) Trouble Sort to completion is too slow for <b>N</b> ≤
+  10<sup>5</sup>.<br>
+  N &lt;= 10^5の場合については、O(N^2)であるトラブルソートを実行するのでは遅すぎる。
+</p>
+<p>
+  Instead, let's break down what Trouble Sort is doing at each step. Let's consider an input list of
+  6 elements. Trouble Sort makes the following comparisons on each pass through the array:<br>
+  代わりに、トラブルソートが各ステップで何をしているのか分解してみよう。6個の要素からなる入力リストを考えよう。トラブルソートは配列をパスするたびに、以下の比較を行っている。
+</p>
+<ul>
+  <li>element 0 ↔ element 2</li>
+  <li>element 1 ↔ element 3</li>
+  <li>element 2 ↔ element 4</li>
+  <li>element 3 ↔ element 5</li>
+</ul>
+<p>
+  Regardless of the length of the list, this table illustrates the fundamental flaw in Trouble Sort:
+  even-index elements are compared with other even-index elements, and odd-index elements are
+  compared with other odd-index elements, but even-index and odd-index elements are never compared
+  with each other! This means that Trouble Sort is just bubble sort run separately on the even-index
+  elements and the odd-index elements, interleaving them into the output list. Trouble Sort is
+  correct only if interleaving the two sub-lists (the even-index list and the odd-index list)
+  happens to produce another sorted list. Since there are O(<b>N</b>) even-index and O(<b>N</b>)
+  odd-index elements, and since bubble sort is O(<b>N</b><sup>2</sup>), Trouble Sort is also
+  O(<b>N</b><sup>2</sup>).<br>
+  リストの長さに関わらず、この表は、トラブルソートの基礎的な欠陥をあらわにしている。偶数番目の要素は他の偶数番目要素と比較されており、奇数番目要素は奇数番目要素と比較されている。しかし偶数番目要素と奇数番目要素は比較されていない！　このことは、トラブルソートとは単に、偶数添字要素らと奇数添字要素らを別々にバブルソートして、出力リストへと組み合わせるものにすぎないことを意味している。トラブルソートは、偶数添字要素のリストと奇数添字要素のリストを組み合わせたリストが偶然整列されているような場合にのみ正しく動作する。O(N)個の偶数添字とO(N)個の奇数添字があり、バブルソートはO(N^2)であるから、トラブルソートもまたO(N^2)である。
+</p>
+<p>
+  To solve test set 2, we can can run our favorite O(<b>N</b> log <b>N</b>) sorting algorithm
+  independently on the two sub-lists described above, interleave the sorted sub-lists, and then find
+  the first sorting error as in our solution for test set 1.<br>テストセット2を解くには、O(N log N)である任意の整列アルゴリズムを用い、上記した2つのリストをそれぞれ独立に整列する。そしてそれらを組み合わせ、テストセット1の解と同様に整列エラーを検索する。
+</p>
+
+<h4>Go, Gopher!<br>行け、ホリネズミ！</h4>
+<h3>Test set 1 (Visible)</h3>
+<p>
+  For test set 1, we need to prepare all the cells within a grid-aligned rectangle of size
+  at least 20. Before starting to deploy the gopher, let's choose a rectangular target region of
+  size at least 20. We will try to prepare all the cells within this target region. One option is to
+  choose a 4 x 5 target region. We could have chosen 3 x 7,
+  5 x 5 etc, but it should not be too big. It does not matter where we place this
+  target region in our initial 1000 x 1000 matrix. So let's place it such that one
+  corner of the rectangle is at (1, 1) and the opposite corner is at (4, 5). Here (r, c) refers to
+  the cell in the r-th row and the c-th column of the original matrix. Now the question is: can we
+  come up with a strategy that will prepare all of the cells in this target region, and no other
+  cells?<br>
+  テストセット1については、少なくとも20の大きさの格子が並んだ矩形の内側のセルらを準備する必要がある。ホリネズミに指示する前に、20以上の大きさになる矩形状のターゲット領域を選ぼう。このターゲット領域の全てのセルらを準備することにする。一つの選択肢は、4x5の大きさの領域を選ぶことである。3x7や5x5などを選んでもよいが、大きすぎてはいけない。初期状態の1000x1000行列において、ターゲット領域を配置する位置はどこでもいいから、矩形のある角が(1, 1)に来るように配置し、逆の角が(4, 5)に来るようにしよう。ここで、(r, c)は、当初の行列におけるr行c列にあるセルを表す。ここで疑問になるのは、このターゲット領域の中の全てのセルを準備し、他のセルは準備しないような戦略を見つけることができるかどうかだ。
+</p>
+<p>
+  Let's visualize our 4 x 5 target region as follows (row and column numbers are given
+  for convenience):<br>
+  4x5のターゲット領域を可視化したのが次のものである。なお、便宜的に行と列の番号が与えてある。
+</p>
+<p>
+  <code>
+  &nbsp;&nbsp;12345<br>
+  1 xxxxx<br>
+  2 x@@@x<br>
+  3 x@@@x<br>
+  4 xxxxx<br>
+  </code>
+</p>
+<p>
+  We marked the internal cells with <code>@</code> and the border cells with <code>x</code>. The
+  gopher should not be deployed on the border cells, because that might cause it to prepare a cell
+  outside of our target region. We will only deploy on the internal cells (cells marked with
+  <code>@</code> in the above picture). We can deploy the gopher 1000 times in total and we have 6
+  internal cells. Let's deploy the gopher to each of the internal cells
+  <code>floor(1000 / 6) = 166</code> times. Will this be enough to solve test set 1?<br>
+  内部のセルを@で表し、境界のセルをxで表した。ホリネズミがターゲット領域の外側を準備してしまうかもしれないから、境界セルをホリネズミに指示するべきではない。内部のセル（@）にのみハリネズミを派遣する。私達は6個の内部セルを持っており、ホリネズミを合計1000回派遣できる。それぞれの内部セルにfloor(1000 / 6) = 166回ホリネズミを派遣したならば、テストセット1を解くために十分だろうか？
+</p>
+<p>
+  To answer this crucial question, let us compute the probability that after deploying the gopher as
+  described above, the (1, 1)
+  cell is still unprepared. Notice that this cell can only be prepared by deploying the gopher at
+  (2, 2). Every time we do this, it has a 1/9 probability of preparing (1, 1). Looking at it from
+  another angle, every time we do this, it has an 8/9 probability of not preparing (1, 1). So the
+  probability that (1, 1) will not be prepared after 166 deployments to (2, 2) is
+  (8/9)<sup>166</sup> = 3.226 x 10<sup>-9</sup>, which is quite small. Realistically, we do not need
+  to worry about this happening to any of the four corners (since the probability of this happening
+  to at least one of
+  the four corners is 1 - (1 - 3.226 x 10<sup>-9</sup>)<sup>4</sup> = 1.29 x 10 <sup>-8</sup>).
+  Other cells are adjacent to more than one internal cell, and thus they are more likely to be
+  prepared than the corners. So this solution is sufficient to pass test set 1.<br>
+  この重大な問いに答えるために、上記のようにホリネズミを派遣した際に(1, 1)セルが依然準備されない確率を計算してみよう。このセルは、ホリネズミを(2, 2)に派遣した際にのみ準備されうることに留意する。派遣するたびに、1/9の確率で(1, 1)が準備される。言い換えれば、8/9の確率で(1, 1)が準備されないということだ。よって、(2, 2)に166回派遣してなお(1, 1)が準備されない確率は(8/9)^166 = 3.226 * 10^-9であり、これはとても小さい。4隅のどれかが準備されない確率は、1 - (1 - 3.226 * 10^-9) = 1.29 * 10^-8であるから、現実的には憂慮する必要はない。他のセルは1個以上の内部セルと並んでいるから、角よりも準備される確率が大きい。だから、この解はテストセット1を通過するために十分である。
+</p>
+<p>
+  To convince you further we ran a simulation. We deployed the
+  gopher to the center of a 3 x 3 region until all the nine cells in the region is
+  prepared. We ran this 100000 times and following is the result:<br>
+  わかりやすくするため、シミュレーションを行った。3x3の領域についてその9個のセルの全てが準備されるまでホリネズミを派遣した。このシミュレーションを100,000回実行した結果が次図である。
+</p>
+<p>
+  The above figure shows how many of our 100000 simulations (y axis) required each possible
+  number of deployments (x axis). As we can see, out of 100000 simulations the maximum number of
+  times we needed to
+  deploy the gopher was not more than 120. So 166 deployments would be more than enough to prepare
+  an internal cell and all of its surroundings.
+  Moreover, once we have prepared an internal cell and all eight of its neighbors, there is no
+  reason to deploy the gopher there again, so we will almost certainly have more than 166
+  deployments to use to fill in the last stubborn cell if necessary.<br>
+  上図は、x軸でホリネズミを派遣した回数を表し、y軸には、100,000回行ったシミュレーションのうち何回がその派遣回数であったかを表している。図から見てとれるように、100,000回のシミュレーションにおいては、ホリネズミを派遣する必要があった回数は120回を超えなかった。よって、166回の派遣は、内部セルおよび周囲の全てのセルを準備するために全く十分だろう。その上、ある内部セルとその周囲8個のセルを準備できたならば、さらにそのセルにホリネズミを派遣する理由はない。だから、準備されにくかった残余のセルを準備するために、私達は必要なら、166回を超える派遣回数をそこに与えられることはほとんど確実だ。
+</p>
+<h3>Test set 2 (Hidden)</h3>
+<p>
+  Now we need to create a rectagular region of area at least 200. If we used the same strategy
+  described above, for, say a 10 x 20 size rectangle, we could make
+  <code>floor(1000/(18 * 8)) = 6</code> deployments to each of the internal cells. But then the
+  probability of (1, 1) being not prepared would be: (8/9)<sup>6</sup> = 0.49327, which is way
+  too high!<br>
+  今回は、200以上の面積の矩形領域を作る必要がある。もし上記と同じ戦略を、例えば大きさ10x20の矩形に対して用いたならば、それぞれの内部セルにfloor(1000/(18 * 8)) = 6回派遣することができる。しかしその場合に、(1, 1)が準備されずに終わる可能性は(8/9)^6 = 0.49327であり、これは余りにも大きすぎる！
+</p>
+<p>
+  How can we improve this strategy? We can observe that most of the cells can be prepared
+  from a number of locations. For example, the cell (2, 2) can potentially be prepared on a
+  deployment to any of the internal cells around it, or to the cell itself. What if
+  we divide our rectangular region into disjoint 3 x 3 regions and
+  only deploy the gopher to the center cells of those regions? This way each of the cells can be
+  prepared from only one cell. To sum things up, our plan is:<br>
+  どうしたらこの戦略を改善できるだろう？　ほとんどのセルについては、いくつもの位置から準備されうると考えられる。例えばセル(2, 2)は、周囲の内部セルのどれかへの派遣によって準備される可能性があるし、そのセル自身への派遣によって準備される可能性もある。もし、私達の矩形領域を、接続しない3x3領域らに分けて、それらの領域の中心のセルにのみホリネズミを派遣したならばどうなるだろうか？　この場合、どのセルも、一つのセルからのみ準備されうる。まとめると、私達の計画は次のように言える。
+</p>
+<ul>
+  <li>Select a large enough rectangle, say 3 x 69.<br>十分に大きな矩形を選ぶ。例えば3x69である。
+  </li><li>For convenience, we will place the corner of this 3 x 69 rectangle at (1, 1).<br>利便性のために、この3x69の矩形の角を(1, 1)に置く。
+  </li><li>We will divide our initial 3 x 69 region into 69/3 = 23 disjoint
+    3 x 3 regions. That is, we will deploy the gopher only to (2, 2), (2, 5), (2, 8)
+    ... (2, 68): the center cells of those regions.<br>この当初の3x69領域を、69/3 = 23個の接続しない3x3領域に分割する。すなわち、ホリネズミを、各領域の中心セルである、(2, 2), (2, 5), (2, 8), ..., (2, 69)にのみ派遣する。
+  </li><li>We will keep deploying the gopher at (2, 2) until all the cells inside the 3 x 3 grid centered
+    on (2, 2) are prepared.<br>(2, 2)セルを中心とする3x3領域の全てのセルが準備されるまで、(2, 2)にホリネズミを派遣しつづける。
+  </li><li>Then we will deploy at (2, 5) and so on.<br>それが済めば、(2, 5)に派遣する。以下、同様に行う。
+</li></ul>
+<p>
+  Is that enough? As the above simulation showed, sometimes it requires 120 deployments to prepare
+  entire 3 x 3. So in the worst case 23 x 120 = 2760 deployments to prepare entire 3 x 69 region
+  which is more than out limit 1000. However, such worst case will not happen always. We ran
+  another simulation to examine our new strategy:<br>
+  これは十分か？　上のシミュレーションの結果によれば、3x3領域を準備するためには、120回の派遣が必要な場合がある。よって、3x69領域を準備するためには、最悪で、23 * 120 = 2760回派遣する必要があって、これは上限である1000回より大きい。しかしながら、そのような最悪の場合は、常に起こるわけではない。この新しい戦略を調査するために私達はさらに下図のシミュレーションを行った。
+</p>
+<p>
+  The above figure shows how many of our 100000 simulations (y axis) required each possible
+  number of deployments (x axis) to prepare all the cells inside 3 x 69 target region. As we can
+  see, the maximum we
+  needed is no more than 850 and our limit was 1000. So we can be confident that this strategy is
+  good enough to pass test set 2.<br>
+  上図において、x軸は、3x69のターゲット領域の全てのセルを準備するために必要であった派遣回数を表しており、y軸は、100,000回のシミュレーションのうちいくつがその派遣回数だったかを表している。見てとれるように、必要回数の最大値は850を超えないから、つまり限界である1000回を超えない。よって、この戦略がテストセット2を通過するために十分に良いものであると確信できる。
+</p>
+<p>
+  There are many other strategies. One may be, to deploy the gopher to the cell that has the largest
+  number of unprepared cells in 3 x 3 region centering at that cell. This strategy yields
+  following simulation result (100000 runs), which looks better than the one before:<br>
+  他にも多くの戦略がある。その一例は、あるセルを中心とする3x3領域の中のまだ準備されていないセルの個数が最大であるようなセルにホリネズミを派遣する戦略である。この戦略は、100,000回シミュレーションを実行すると下図の結果をもたらす。この結果は上のものより良い。
+</p>
+
+<h4>Cubic UFO<br>立方体状の未確認飛行物体</h4>
+<p>
+  This is an ad hoc geometry problem with many different solutions.<br>
+  これは今回のための幾何学問題であって、多くの異なる解がある。
+</p>
+<h3>Test Set 1 (Visible)</h3>
+<p>
+  Suppose the cube is initially axis-aligned. Let us rotate it about the z-axis
+  by angle t, from +x towards +y, and study the shadow:<br>
+  立方体が初期状態では軸に沿っていると仮定する。下図のように、z軸を中心に+xから+yへ角度tだけ回転し、生じる影について調べよう。
+</p>
+<p>Key observations:<br>以下が要点となる。</p>
+<ul>
+  <li>The shadow is a rectangle aligned to x- and z-axes, starting out as a
+    square for t = 0.<br>影はx軸とz軸に沿った矩形であり、角度0の場合の正方形から始まる。</li>
+  <li>For 0 ≤ t ≤ π/4 (45 degrees): z-length = 1 always, and
+    x-length = V<sub>x</sub> − W<sub>x</sub>, where V<sub>x</sub> and
+    W<sub>x</sub> are x-components of vertices V and W in the figure. Therefore
+    this is really a 2-D problem; we can ignore z!<br>tが0度以上45度以下のとき、z方向の長さは常に1であり、x方向の長さはV_x - W_xである。ここで、V_xとW_xは、図中の頂点VとWのx成分だ。よってこれは実は二次元問題であって、z軸回転は無視できる。</li>
+  <li>The shadow area is <b>A</b> =
+    1 × (V<sub>x</sub> − W<sub>x</sub>) = 2 V<sub>x</sub>,
+    since W<sub>x</sub> = −V<sub>x</sub>.<br>影の面積Aは1 * (V_x - W_x) = 2 * V_xである。なぜならば、W_x = -V_xだからである。</li>
+</ul>
+<p>
+  For this setup, maximal area is attached when t = π/4, which corresponds to
+  V<sub>x</sub> = √(½), resulting in <b>A</b> = √2 ≈
+  1.414214. This exceeds all Test Set 1 inputs, so the setup is sound.<br>
+  この仕組みにおいては、面積が最大になるのはtが45度の場合であり、これはV_x = sqrt(1/2)のときだ。そのときAは約1.414214である。この値は、テストセット1のどの入力より大きいから、この仕組みで十分によい。
+</p>
+<p>
+  Next, we find the shadow area <b>A</b> as a function of angle t. From basic
+  geometry, V<sub>x</sub> = √(½) × cos(t − π/4).
+  Therefore
+  <b>A</b> = 2V<sub>x</sub> = √2 × cos(t − π/4),
+  for 0 ≤ t ≤ π/4.<br>
+  次に、影の面積Aを、角度tの関数として見つけよう。基本的な幾何学から、...だ。よって、0度以上45度以下のtについて、Aは...である。
+</p>
+<p>
+  Given <b>A</b>, naively we'd invert the formula and get t as sum of π/4
+  and cos<sup>−1</sup>(<b>A</b> / √2).
+  However, to satisfy 0 ≤ t ≤ π/4, we need the negative branch of
+  cos<sup>−1</sup>! Therefore the inverse is:<br>
+  Aが与えられたとき、この数式を素朴に逆にしてtを求めると、...と...の和として求めることができる。しかしながら、...を満たすためには、...にが負である場合を考えねばならない。よって逆関数は次のようになる。
+</p>
+<p>
+  t = π/4 − |cos<sup>−1</sup>(<b>A</b> / √2)|.
+</p>
+<p>Once t is obtained, the final outputs are the centers of three non-parallel
+  faces. One such face (invariant for all t) is (0, 0, ½). The other
+  two can be obtained from rotating (½, 0), and (0, ½) by angle t,
+  and assigning z to 0. Using the
+  <a href="https://en.wikipedia.org/wiki/Rotation_matrix#In_two_dimensions" target="_blank">rotation formula</a>
+  yields (½ cos(t), ½ sin(t), 0) and
+  (−½ sin(t), ½ cos(t), 0).<br>
+  tが得られたならば、最後の出力は、並行でない3つの表面の中心である。そのような面の一つは、(任意のtで一定で）(0, 0, 1/2)である。他の2つは、(1/2, 0)と(0, 1/2)を角度tだけ回転し、zを0とすることで得られる。回転公式を用いて、...と...が得られる。
+</p>
+<h3>Test Set 2 (Hidden)</h3>
+<p>Our solution hinges on the following two crucial observations:<br>ある解は、次の2つの重要な点から導ける。</p>
+<ul>
+  <li>The cube will cast the smallest possible shadow, which has a square
+    shape, when one of its faces is parallel to the xz-plane.<br>立方体が可能な最小の影を落とすとき、その影は正方形であり、立方体のある面はxz平面に並行だ。</li>
+  <li>The cube will cast the largest possible shadow, which has the shape of a
+    regular hexagon, when one of its vertices is on the y-axis.<br>立方体が可能な最大の影を落とすとき、その影は正六角形であり、立方体の頂点の一つはy軸上にある。</li>
+</ul>
+<p>
+  To simplify the computations, let's rotate the cube about the y-axis by 45
+  degrees. (The direction of the rotation does not matter, since the cube would
+  end up in the same orientation either way.) After that, the cube will look
+  like this:<br>
+  計算を簡単にするために、y軸について立方体を45度回転しよう。回転の方向は考える必要がない。というのも、どちらにせよ結局、立方体は同じ向きになるからである。45度回転した結果、立方体は次の図のようになる。
+</p>
+<p>
+  It might not be immediately clear why this simplifies our life, but it will
+  make sense soon!<br>
+  これが私達の生活を簡単にする理由は直ちには明らかではないかもしれない。しかし少し読み進めればこの意味がわかるだろう！
+</p>
+<p>
+  According to the above observations, the cube currently has the smallest
+  possible shadow. To maximize that shadow, we can rotate the cube about the
+  x-axis from +z towards +y, and bring the vertex H (from our diagram
+  above) onto the y-axis. A useful property of this rotation is that the area
+  of the shadow consistently increases throughout this rotation. Since we start
+  with the smallest possible shadow and continuously rotate until we get the
+  largest possible shadow, we achieve every possible shadow area at some point
+  during this rotation. So, we can use
+  <a href="https://en.wikipedia.org/wiki/Binary_search_algorithm" target="_blank">binary search</a>
+  to figure out the exact angle by which we need to rotate the cube about the
+  x-axis to achieve the desired area.<br>
+  上記の考察のとおり、立方体は現在、最小の影を持っている。影を最大化するために、x軸を回りに+zから+yに立方体を回転して、上図の頂点Hをy軸に乗せることができる。この回転の好都合な性質は、回転する過程を通して影の面積が増加しつづけることだ。ありうる最小の影から始めてありうる最大の影になるまで回転を続けたのだから、この回転の過程の任意の点によって、ありうる任意の影の面積を得られる。よって、望ましい面積を得るためにx軸回りに回転させるちょうどよい角度を算出するために、二分探索を利用できる。
+</p>
+<p>
+  However, two questions remain:<br>
+  しかし、次の2つの疑問が残る。
+</p>
+<ul>
+  <li>If we rotate the cube about the x-axis by a certain angle, what will be
+    the coordinates of the vertices of the cube?<br>x軸についてある角度だけ立方体を回転させたとき、頂点らの座標は何か？</li>
+  <li>Given the coordinates of the vertices, how can we calculate the area of
+    the shadow?<br>頂点らの座標を与えられた時、影の面積をどうやって計算できるか？</li>
+</ul>
+<h4>Rotating a cube about the x-axis<br>x軸回りの立方体の回転</h4>
+<p>
+  Notice that, since we are rotating the cube about the x-axis, the
+  x-coordinates of the points will remain the same; only the y- and z-
+  coordinates will change. So, instead of performing rotations in 3-D, we will
+  project the point onto the yz-plane (the x = 0 plane) and perform the
+  rotations in 2-D.<br>
+  x軸回りに立方体を回転するのであるから、x座標は変わらず、y座標とz座標のみ変化することに注意しよう。よって、三次元に回転を行う代わりに、点をx = 0の平面に投影して、二次元で回転しよう。
+</p>
+<p>
+  For example, suppose that we want to rotate point P = (P<sub>x</sub>,
+  P<sub>y</sub>, P<sub>z</sub>) about the x-axis from +z towards +x by
+  angle t. First, we project the point onto the yz-plane, where it will have
+  coordinates (0, P<sub>y</sub>, P<sub>z</sub>). We will ignore the x component
+  and treat the point as (P<sub>y</sub>, P<sub>z</sub>) on a 2-D plane.<br>
+  例えば、点P = ... をx軸回りに+zから+xへ角度tだけ回転したいとする。まず、その点をyz平面に投影して座標...を得る。x成分を無視して、点を二次元平面における...として扱う。
+</p>
+<p>
+  Now, rotation about the x-axis by angle t in the indicated direction is
+  equivalent to rotating (P<sub>y</sub>, P<sub>z</sub>) about (0, 0) by angle
+  t in a clockwise direction. The resulting 2-D point will be<br>
+  そうすると、x軸回りに同じ方向に角度tだけ回転することは、...を(0, 0)を中心に時計回りに角度t回転することに等しい。その結果、二次元の点は次のようになるだろう。
+</p>
+<p>
+  (P<sub>y</sub>', P<sub>z</sub>') =
+  (P<sub>y</sub> × cos(t) + P<sub>z</sub> × sin(t),
+  −P<sub>y</sub> × sin(t) + P<sub>z</sub> × cos(t)),
+</p>
+<p>
+  which in 3-D becomes (P<sub>x</sub>, P<sub>y</sub>', P<sub>z</sub>'). We can
+  get this from the rotation formula, or the complex expression
+  (P<sub>y</sub> + <i>i</i>P<sub>z</sub>) × e<sup>−<i>i</i>t</sup>.<br>
+  これは三次元における...だ。私達はこれを回転公式から得ることもできるし、複素数の式...から得ることもできる。
+</p>
+<h4>Shadow area<br>影の面積</h4>
+<p>
+  As H approaches the y-axis, the shadow on the y = −3 plane takes the
+  shape of a convex hexagon. More specifically, the vertices of the hexagon are
+  the projection of points D, C, G, F, E, and A onto the y = −3 plane.
+  For a point P with coordinates (P<sub>x</sub>, P<sub>y</sub>, P<sub>z</sub>),
+  the coordinates of its projection onto the y = −3 plane are
+  (P<sub>x</sub>, −3, P<sub>z</sub>).<br>
+  Hがy軸に近づくと、y = -3平面にできる影は凸な六角形となる。より具体的に言えば、その六角形の各頂点は、点...のy = -3平面への投影だ。座標が...である点Pについて、y = -3平面への投影の座標は...である。
+</p>
+<p>
+  Now, to find the area of the shadow, we can treat the six projected vertices
+  as if they were on a 2-D plane, with only their x- and z-coordinates. By
+  construction, these already form a
+  <a href="https://en.wikipedia.org/wiki/Convex_hull">convex hull</a> with
+  vertices properly oriented (otherwise one would need to explicitly compute
+  the convex hull, although shortcuts exist for the special case). This enables
+  us to apply the
+  <a href="https://en.wikipedia.org/wiki/Shoelace_formula" target="_blank">standard formula</a>
+  to compute area of a convex polygon. Note that area computation can also be
+  simplified by using symmetry with respect to the z-axis, and apply the
+  trapezoid area formula instead of the general convex polygon.<br>
+  今や、影の面積を求めるために、6個の投影された頂点を、xとz軸のみの二次元平面にあるかのように扱える。作図方法から、これらはすでに、適切な向きを持った凸包をなす。（なお、向きが適切でなければ、特別な場合には省略が存在するものの、凸包を陽に算出する必要がある。）　これにより、座標法によって凸多角形の面積を計算できる。なおまた、面積計算はz軸における対称性を利用して簡略化できるから、一般的な凸多角形の公式を使わずとも、台形の面積の公式が使える。
+</p>
+<p>
+  Once we have a set of coordinates that produces the desired area, we can
+  compute the coordinates of the face-centers of any three
+  non-pairwise-parallel faces, and we have solved the problem. With the setup
+  above, these are simply ½(A + C), ½(C + F), and
+  ½(F + A).<br>
+  目的の面積をもたらす座標らの組が得られたならば、互いに並行でない3つの面の中心座標を計算することができ、それによって問題を解くことができる。上の仕組みにより、それらは簡単に...である。
+</p>
+<h4>Other approaches<br>その他のアプローチ</h4>
+<p>
+  There are many other ways to solve this problem:<br>
+  この問題を解くには、以下に示すように、他にも多くの方法がある。
+</p>
+<ul>
+  <li>Instead of binary searching, the angle of rotation can be solved directly.
+    In fact, final coordinates can be computed using a closed form without
+    using trig functions!<br>二分探索を用いる代わりに、回転角度を直接解くことができる。実際のところ、最終的な座標は三角関数を用いずに閉形式で計算可能である。</li>
+  <li>We could avoid computing the area of the shadow by using
+    <a href="https://www.youtube.com/watch?v=rAHcZGjKVvg" target="_blank">this amazing cube shadow theorem.</a><br>この驚異的な立方体の影の定理を用いることで、影の面積の計算を避けることができる。</li>
+  <li>Instead of doing two rotations (one about the y-axis and another about
+    the x-axis), we could rotate the cube about line connecting points
+    (0, 0, 0) and (1, 0, 1), or some other similar axis, to bring a vertex onto
+    the y-axis. The general rotation formula can be found
+    <a href="https://en.wikipedia.org/wiki/Rotation_matrix#Rotation_matrix_from_axis_and_angle" target="_blank">here</a>.<br>y軸回りとx軸回りに2回回転する代わりに、(0, 0, 0)と(1, 0, 1)を結ぶ線などを中心に立方体を回転させることで、頂点をy軸に乗せることができる。一般の回転公式についてはここに記載されている。</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </body>
+</html>
