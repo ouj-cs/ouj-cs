@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+  </head>
+  <body>
+  <h1>Learn Git in a Month of Lunches - "Lab" solutions</h1>
+  <p>なお、文中のページ数は、日本語版による。</p>
+  <h2>Chapter 3 - Lab (p. 44)<h2>
+  <h4>1. You told Git your name and email, but where does Git save that information? See if you can locate where this is.</h4>
+  <p>gitの設定の名前空間は3層で、system、global、localである。localの設定ファイルは、あるリポジトリ直下の.git/configである。globalの設定ファイルは、Linuxの場合には、~/.gitconfigである。この章では、p. 33で<code>--global</code>に設定を書き込んだので、Linuxについては、これ（~/.gitconfig）が正答になるだろう。テキストファイルだから、<code>cat ~/.gitconfig</code>などとして内容を確認できる。</p>
+  <h4>2. Git is known as the <i>stupid content tracker</i>. What <code>git help</code> page says this?</h4>
+  <p>Gitが「stupid content tracker（馬鹿な内容追跡機？）」だとの記述は、（Linuxでは）<code>man git</code>とすれば、冒頭に見えるようだ。同じ記述は、<code>git help git</code>としても見ることができるようだ。（Windowsでは、ブラウザで表示された。）　これが正答か。</p>
+  <p>なおここで「stupid」と（一見否定的に）言う主旨は、機能が正しく最小限に抑えられている、というような意味であるようだ。</p>
+  <h4>3. What is the Git command that forward-ports local commits?</h4>
+  <p>p. 35-37に3回、次のような記載がある。これを想定した問題で、つまり正答は「rebase」だろう。</p>
+  <p>rebase&nbsp;&nbsp;&nbsp;&nbsp;Forward-port local commits to the updated upstream head</p>
+  <p>ただし、git version 2.14.1で<code>git --version</code>してみたところ、次のように表示された。</p>
+  <p>rebase&nbsp;&nbsp;&nbsp;&nbsp;Reapply commits on top of another base tip</p>
+  <p>本文の文脈からして、現時点でrebaseコマンドの理解は求められていまい。つまり、gitのバージョンにやや依存した設問であるようだ。</p>
+  <h4>4. What does the abbreviation DAG stand for, in the context for Git?</h4>
+  <p>directed acyclic graph（有向非巡回グラフ）。gitの各コミットは、それぞれを頂点とするDAGをなす。例えばbranchした後でmergeした場合には辺が合流するから、木ではない。しかし、あるコミットの子孫がそのコミット自身に帰ってくることはないから、単に有向グラフであるのみならず、特に（有向）閉路がない。よってDAGだ。</p>
+  <h4>5. Does your installation come with a Git tutorial help file?</h4>
+  <p><code>git help tutorial</code>とすれば、チュートリアルが読むことができる。</p>
+  <h4>6. The command-line commands you saw in the first TRY IT NOW are not Git commands, but rather Unix/Linux commands. Do they display anything helpful when you type them followed by the <code>--help</code> switch?</h4>
+  <p>the first TRY IT NOW（最初の「演習」）とはどれだろうか？　3章の最初の演習は、p. 33だろう。むしろ設問の意図は、p. 38を指しているように見える。ここで例示されるコマンドは、pwd、ls、mkdir、cdである。これらは--helpオプションに対応している。--helpオプションについては、GNU Coding Standardsの4.7.2で定められている。</p>
+  <h4>7. When Git is given the <code>-p</code> (or <code>--paginate</code>) switch, it uses the command-line tool <code>less</code>. Type <code>less --help</code> to play with this pager some more, and learn about other ways to scroll through long text (for example, instead of scrolling one page at a time, you can scroll one line at a time).</h4>
+  <p>「1行送り」は↓キー（やjキー）でできる。<code>/pattern</code>として検索でき、nやNで次の検索箇所に移動できる。</p>
+  <h2>Chapter 4 - Lab (p. 58)<h2>
+  <h4>1. Create a new directory. Run <code>git init</code> and then run <code>git log</code>. What is the error that you receive? Why might you get this error?</h4>
+  <pre><code>fatal: your current branch 'master' does not have any commits yet</code></pre>
+  <p>と表示される。git logはコミットの履歴を表示するコマンドだが、行われたコミットが存在しなかったために、表示すべき履歴がなく、このように表示したのだろう。</p>
+  <h4>2. Follow thise step carefully:<br>
+    <pre><code>% mkdir twoatonce
+% cd twoatonce
+% git init
+% echo -n contents > file.txt
+% git add file.txt
+% echo -n newcontents > file.txt
+% git status</code></pre>
+    What is the output of the <code>status</code> command? Do you see file.txt twice in the status message? Once to be committed and once to be added?</h4>
+  <pre><code>On branch master
+
+No commits yet
+
+Changes to be committed:
+  (use "git rm --cached &lt;file&gt;..." to unstage)
+
+        new file:   file.txt
+
+Changes not staged for commit:
+  (use "git add &lt;file&gt;..." to update what will be committed)
+  (use "git checkout -- &lt;file&gt;..." to discard changes in working directory)
+
+        modified:   file.txt</code></pre>
+  <p>と表示される。問いの通りに2度表示されている。つまりは、add時点のデータがコミットに備えて保持される。twoatonceは「two at once」の意味だろう。</p>
+  <h4>3. Create another file for a current Git repository, this time using <code>echo contents &gt; file.txt</code>.<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;Note that this time you didn't use the -n switch in the <code>echo</code> command. Now try <code>git add</code> on this file. If you're on Windows, you should see the warning message "warning: LF will be replaced by CRLF in new_file. The file will have its original line endings in your working directory."<br>
+  Read the help for <code>git config</code> (type <code>git config --help</code>), and look at the <code>core.safecrlf</code> and <code>core.autocrlf</code> settings. This warning is Git saying that it will try to be careful with your text file's line endings.<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;The point of this lab is to observe that Git is sensitive to end-of-line issues, the kind that has bedeviled text-file interoperability between Unix/Linux and non-Unix/Linux machines.</h4>
+  <ul>
+    <li>core.safecrlf</li>
+    <ul>
+      <li>If true, makes Git check if converting <b>CRLF</b> is reversible when end-of-line conversion is active. Git will verify if a command modifies a file in the work tree either directly or indirectly. For example, committing a file followed by checking out the same file should yield the original file in the work tree. If this is not the case for the current setting of <b>core.autocrlf</b>, Git will reject the file. The variable can be set to "warn", in which case Git will only warn about an irreversible conversion but continue the operation.</li>
+      <li>CRLF conversion bears a slight chance of corrupting data. When it is enabled, Git will convert CRLF to LF during commit and LF to CRLF during checkout. A file that contains a mixture of LF and CRLF before the commit cannot be recreated by Git. For text files this is the right thing to do: it corrects line endings such that we have only LF line endings in the repository. But for binary files that are accidentally classified as text the conversion can corrupt data.</li>
+      <li>If you recognize such corruption early you can easily fix it by setting the conversion type explicitly in .gitattributes. Right after committing you still have the original file in your work tree and this file is not yet corrupted. You can explicitly tell Git that this file is binary and Git will handle the file appropriately.</li>
+      <li>Unfortunately, the desired effect of cleaning up text files with mixed line endings and the undesired effect of corrupting binary files cannot be distinguished. In both cases CRLFs are removed in an irreversible way. For text files this is the right thing to do because CRLFs are line endings, while for binary files converting CRLFs corrupts data.
+      <li>Note, this safety check does not mean that a checkout will generate a file identical to the original file for a different setting of <b>core.eol</b> and <b>core.autocrlf</b>, but only for the current one. For example, a text file with <b>LF</b> would be accepted with core.eol=lf and could later be checked out with <b>core.eol=crlf</b>, in which case the resulting file would contain <b>CRLF</b>, although the original file contained LF. However, in both work trees the line endings would be consistent, that is either all <b>LF</b> or all <b>CRLF</b>, but never mixed. A file with mixed line endings would be reported by the <b>core.safecrlf</b> mechanism.</li>
+    </ul>
+    <li>core.autocrlf</li>
+    <ul>
+      <li>Setting this variable to "true" is the same as setting the <b>text</b> attribute to "auto" on all files and core.eol to "crlf". Set to true if you want to have <b>CRLF</b> line endings in your working directory and the repository has LF line endings. This variable can be set to <u>input</u>, in which case no output conversion is performed.</li>
+    </ul>
+  </ul>
+  <p>よくわからない。core.autocrlfは、ローカルでCRLF、リモートでLFにしたい時などに便利なようだ。core.safecrlfは、CRLFとLFが混在するバイナリファイルなどを誤って破壊しないために便利なようだ。日本語版2刷の「EOF」は「EOL」の誤りだろう。</p>
+  </body>
+</html>
