@@ -75,5 +75,147 @@ Changes not staged for commit:
     </ul>
   </ul>
   <p>よくわからない。core.autocrlfは、ローカルでCRLF、リモートでLFにしたい時などに便利なようだ。core.safecrlfは、CRLFとLFが混在するバイナリファイルなどを誤って破壊しないために便利なようだ。日本語版2刷の「EOF」は「EOL」の誤りだろう。</p>
+  <h2>Chapter 5 - Lab (p. 72)<h2>
+  <h4>1. From the command line....</h4>
+  <p>新規作成したfile.txtは左上の「Unstaged Changes」のペインに表示される。</p>
+  <h4>2. What is <code>git citool</code>? ....</h4>
+  <p><code>git help citool</code>、<code>git help git-gui</code>などとして情報を得ることができる。git citoolはgit gui citoolと等価である。単一のコミットをGUIで行う機能である。citoolという言葉の由来は不明である。</p>
+  <h4>3. Exit the Gut GUI ....</h4>
+  <p>コマンドラインにおいてステージする操作を行ったため、今やcitool上では、左下の「Staged Changes」ペインに表示される。</p>
+  <h4>4. Exit the Git GUI ....</h4>
+  <p>ファイルデータ更新によって、まだステージされてないデータが生じた。そのため、左上と左下のペインにそれぞれfile.txtが表示される。</p>
+  <h4>5. How do you think you commit both of these changes?</h4>
+  <p>最新のものを改めてステージしてからコミットする。</p>
+  <h4>6. Type <code>gitk</code> at the command line. ....</h4>
+  <p>gitkは直接起動できる。gitkコマンドには--helpオプションは使えない。git help gitkは有効である。</p>
+  <h2>Chapter 6 - Lab (p. 94)<h2>
+  <h4>1. What is another way to call <code>git diff --staged</code>?</h4>
+  <p><code>git diff --cached</code></p>
+  <h4>2. What is the short form of <code>git add --dry-run</code>?</h4>
+  <p><code>git add -n</code></p>
+  <h4>3. How do you display line numbers to your file via the <code>cat</code> command?</h4>
+  <p><code>cat -n file.txt</code></p>
+  <h4>4. The <code>--oneline</code> switch ....</h4>
+  <p><code>git log --pretty=oneline --abbrev-commit</code></p>
+  <h4>5. The <code>-a</code> switch to <code>git commit</code> ....<h4>
+  <p><code>--all</code></p>
+  <h2>Chapter 7 - Lab (p. 121)<h2>
+  <h4>1. 2. 3. 4. 5.</h4>
+  <pre><code>wget https://manning-content.s3.amazonaws.com/download/5/12a774c-8c2d-4ffd-9ebe-d3c5d01605e0/LearnGitMoL_SourceCode.zip
+unzip LearnGitMoL_SourceCode.zip -d LearnGitMoL_SourceCode
+mkdir bigger_file
+cp LearnGitMoL_SourceCode/lorem-ipsum.txt bigger_file/lorem-ipsum.txt
+cd bigger_file/
+git init
+git add lorem-ipsum.txt
+git config user.email "you@example.com"
+git config user.name "Your Name"
+git commit -m "Add a file"
+cp ../LearnGitMoL_SourceCode/lorem-ipsum-change.txt lorem-ipsum.txt</code></pre>
+  <h4>1. How many hunks ....</h4>
+  <p>3個。</p>
+  <h4>2. Using <code>git add -p</code>, ....</h4>
+  <p>git add -pで開始される対話インタフェースでn、y、nと回答すればよい。そしてgit commit -m "Commit a hunk"</p>
+  <h4>3. Now check out the latest code. ....</h4>
+  <p>git checkout -- lorem-ipsum.txt</p>
+  <h4>4. Once again, copy the ....</h4>
+  <p>cp ../LearnGitMoL_SourceCode/lorem-ipsum-change.txt lorem-ipsum.txt</p>
+  <h4>5. Now how many hunks does this change have?</h4>
+  <p>2個。さきほどコミットしたハンク1個が減ったため。</p>
+  <h4>6. Commit the entire file.</h4>
+  <p>git commit -a -m "Commit two hunks"</p>
+  <h4>Changing your mind with a delete</h4>
+  <pre><code>git rm lorem-ipsum.txt
+git reset HEAD lorem-ipsum.txt
+git checkout -- lorem-ipsum.txt</code></pre>
+  <h4>Reading assignments</h4>
+  <pre><code>git checkout [-f|--ours|--theirs|-m|--conflict=&lt;style&gt;] [&lt;tree-ish&gt;] [--] &lt;paths&gt;...
+git reset [-q] [&lt;tree-ish&gt;] [--] &lt;paths&gt;...</code></pre>
+  <h2>Chapter 8 - Lab (p. 145)<h2>
+  <h4>1. How can you list the history from the first commit to the last? ....</h4>
+  <p><code>git log --reverse</code>とすればよい。子コミットが親コミットを参照しているので、子孫からリストするほうがたやすい。</p>
+  <h4>2. Is there a way to list just the most recent <i>N</i> commits? ....</h4>
+  <p>git log -N</p>
+  <h4>3. Can you display the date as time relative to current time ....</h4>
+  <p>git log --date=relative</p>
+  <h4>4. I'm a big fan of <code>git --oneline</code> ....</h4>
+  <p><code>git --pretty=oneline --abbrev-commit</code>である。第6章第4問で既出だろう。</p>
+  <h4>Amending commits</h4>
+  <p>SHA1 IDは変わる。</p>
+  <h4>Using other names</h4>
+  <p>それぞれ、3つ前、2つ前、3つ前、当該コミットメッセージのコミットを表す。</p>
+  <h4>Committing while in detached HEAD mode</h4>
+  <p>ブランチ名の無いコミットを伸ばすことも可能である。しかしgit checkout masterなどとして参照を外せば、ブランチ名を持たないコミットはやがてGCされる。</p>
+  <h4>Deleting tags</h4>
+  <pre><code>git tag my_tag master^^^
+git show my_tag
+git tag -d my_tag</code></pre>
+  <h4>Viewing history (part 2)</h4>
+  <h4>1. What does first commit say? ....</h4>
+  <p>最初のコミットメッセージには「Hi!」とある。そのコミットの時刻は5日前である。</p>
+  <h4>2. What is the SHA1 ID of the commit containing the word <i>ubiquitous</i> ....</h4>
+  <p>git show master@{19}とすると、ubiquitousの文字が見える。</p>
+  <h4>3. Which commit was authored by ....</h4>
+  <p>git show master@{7}である。<code>git log --oneline --author="rgu@freeshell.org"</code>として自動的に検出できる。</p>
+  <h4>4. The dates of the commits have ....</h4>
+  <p>git log --since=yesterday</p>
+  <h4>5. Open the repository in gitk and ....</h4>
+  <p>Patch viewでは、当該コミットで変更されたファイルらの差分が確認できる。Tree viewでは単に、repository内のファイルそれぞれの内容が確認できる。</p>
+  <h2>Chapter 9 - Lab (p. 171)<h2>
+  <h4>Using the GUI for branch work</h4>
+  <pre><code>git checkout new_feature  # Fails.
+git branch another_fix_branch2 another_fix_branch
+git branch four_files_galore2 four_files_galore
+git branch -d another_fix_branch2
+git branch -d four_files_galore2</code></pre>
+  <h4>Warm-up questions</h4>
+  <pre><code>git branch wrong_name
+git branch -m wrong_name correct_name
+git branch -d correct_name
+git rev-parse :/"Renaming c and d."
+git log --graph           # Draw a graphical representation.
+git log --decorate        # Print out the ref names.
+git log --pretty=oneline  # A format which is designed to be compact.
+git log --all             # Pretend as if all the refs are listed.
+git log --abbrev-commit   # Show only a partial prefix.
+</code></pre>
+  <p>削除されたブランチはGC待ちになる。</p>
+  <h4>Working on another_fix_branch</h4>
+  <p><code>git checkout [-p|--patch] [<tree-ish>] [--] [<paths>...]</code>が対応する。指定の操作の後にはちょうど図中の状態になる。</p>
+  <h4>Viewing branches</h4>
+  <h4>1. What commit do all the example branches start from?</h4>
+  <p>git rev-parse :/"This is the first"</p>
+  <h4>2. How many commits ....</h4>
+  <p>git rev-list --count branch_30</p>
+  <h4>3. Three branches are ....</h4>
+  <p>git branch --contains random_prize_1</p>
+  <h4>4. Locate the tag labeled random_tag_on_file. ....</h4>
+  <p>git branch --contains random_tag_on_file</p>
+  <h4>5. Type ....</h4>
+  <p>tipのみ列挙される。--graphオプションをつければ、さらにグラフ表示される。</p>
+  <h2>Chapter 10 - Lab (p. 197)<h2>
+  <h4>1. Read the ....</h4>
+  <h4>2. Create a branch from ....</h4>
+  <p>子孫に祖先をmergeしても「Already up-to-date.」と表示されるのみで何も起きない。</p>
+  <h4>3. In section ....</h4>
+  <p>ブランチmasterにbugfixマージ済みの状態では、マージによって変更は生じないため、diffコマンドを実行しても何も出力されない。ブランチ名の代わりにSHA1 IDを与えることもできる。ブランチ名の順序を逆にすると、bugfixにmasterをマージする場合の更新箇所が示される。</p>
+  <h4>4. Delete the ...</h4>
+  <p>「A new_file」などとして、追加されるファイルが「A」で示される。</p>
+  <h4>5. The fast-forward merge ....</h4>
+  <p>「--no-ff」オプションが利用できる。それでp. 195の演習を繰り返すと、recursive strategyによるマージコミットが発生する。</p>
+  <h4>Calculating the base of a merge with git merge-base</h4>
+  <p>git merge-base master bugfixと入力すれば、merge baseのSHA1 IDが得られる。</p>
+  <h4>Changing how conflicts are displayed (merge.conflictstyle)</h4>
+  <p>git config merge.conflictstyle diff3としてからgit merge bugfixなどとすれば、merge baseの内容も加えて3点の比較を得ることができる。</p>
+  <h4>Performing octopus merges</h4>
+  <pre><code>git checkout -b b1 bug_here
+touch b1
+git add b1
+git commit -m "Add b1"
+git checkout master
+git merge --strategy=octopus bugfix b1
+gitk
+git config alias.lol "log --graph --decorate --pretty=oneline --all --abbrev-commit"
+git lol</code></pre>
   </body>
 </html>
